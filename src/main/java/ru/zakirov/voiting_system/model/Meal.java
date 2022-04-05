@@ -1,5 +1,6 @@
 package ru.zakirov.voiting_system.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.validator.constraints.Range;
@@ -32,7 +33,7 @@ public class Meal extends BaseEntity {
     @Range(min = 10, max = 5000)
     private int calories;
 
-    @Column(name = "added", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
+    @Column(name = "added", nullable = false, columnDefinition = "timestamp default now()")
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date dateAdded = new Date();
@@ -40,6 +41,7 @@ public class Meal extends BaseEntity {
     @ManyToOne(optional = true,
     fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
+    @JsonBackReference
     private Restaurant restaurant;
 
     public Meal(String description, BigDecimal price, int calories, Date dateAdded) {

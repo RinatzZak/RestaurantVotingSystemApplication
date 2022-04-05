@@ -1,10 +1,7 @@
 package ru.zakirov.voiting_system.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -15,12 +12,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(name = "meal", indexes = {
-        @Index(name = "idx_meal_description", columnList = "description")
-})
+@Table(name = "meal")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString
 public class Meal extends BaseEntity {
 
     @Column(name = "description", nullable = false)
@@ -41,9 +37,14 @@ public class Meal extends BaseEntity {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date dateAdded = new Date();
 
-    @ManyToOne
+    @ManyToOne(optional = true,
+    fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    public Meal(String description, BigDecimal price, int calories, Date dateAdded) {
+        this(null, description, price, calories, dateAdded);
+    }
 
     public Meal(Integer id, String description, BigDecimal price, int calories, Date dateAdded) {
         super(id);

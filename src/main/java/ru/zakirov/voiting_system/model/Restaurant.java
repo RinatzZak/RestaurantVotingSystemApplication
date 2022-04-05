@@ -1,8 +1,10 @@
 package ru.zakirov.voiting_system.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -11,22 +13,31 @@ import java.util.List;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(callSuper = true)
-public class Restaurant extends NamedEntity {
+public class Restaurant extends BaseEntity {
+
+    @Column(name = "description", unique = true)
+    @NotBlank
+    @Size(min = 2, max = 50)
+    private String description;
 
     @Column(name = "address")
     @NotBlank
     private String address;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant", orphanRemoval = true)
+    @Column(name = "menu")
+    @JsonManagedReference
     private List<Meal> menu;
 
-    public Restaurant(List<Meal> menu, String address) {
+    public Restaurant(String description, List<Meal> menu, String address) {
+        this.description = description;
         this.menu = menu;
         this.address = address;
     }
 
-    public Restaurant(Integer id, String name, List<Meal> menu, String address) {
-        super(id, name);
+    public Restaurant(Integer id, String description, List<Meal> menu, String address) {
+        super(id);
+        this.description = description;
         this.menu = menu;
         this.address = address;
     }

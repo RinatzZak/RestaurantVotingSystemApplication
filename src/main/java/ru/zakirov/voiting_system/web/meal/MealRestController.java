@@ -23,57 +23,6 @@ import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkNew;
 @Slf4j
 @RequestMapping(value = MealRestController.REST_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
 public class MealRestController {
-//    static final String REST_URL = "/api/admin/restaurants/{restaurant_id}/meals";
-//
-//    private final MealRepository repository;
-//
-//    private final RestaurantRepository restaurantRepository;
-//
-//    public MealRestController(MealRepository repository, RestaurantRepository restaurantRepository) {
-//        this.repository = repository;
-//        this.restaurantRepository = restaurantRepository;
-//    }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Meal> get(@PathVariable int id, @PathVariable int restaurant_id) {
-//        log.info("get {}", id);
-//        return ResponseEntity.of(repository.findById(id));
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void delete(@PathVariable int id) {
-//        log.info("delete {}", id);
-//        repository.deleteById(id);
-//    }
-//
-//    @GetMapping
-//    public List<Meal> getAll() {
-//        log.info("getAll");
-//        return repository.findAll();
-//    }
-//
-//    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<Meal> createWithLocation(@Valid @RequestBody Meal meal, @PathVariable int restaurant_id) {
-//        log.info("create{}", meal);
-//        checkNew(meal);
-//        Meal created = repository.save(meal);
-//        created.setRestaurant(restaurantRepository.getById(restaurant_id));
-//        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-//                .path(REST_URL + "/{id}")
-//                .buildAndExpand(created.getId()).toUri();
-//        return ResponseEntity.created(uriOfNewResource).body(created);
-//    }
-//
-//    @PutMapping(value = "/{restaurantId}/meals/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void update(@Valid @RequestBody Meal meal, @PathVariable int id, @PathVariable int restaurant_id) {
-//        log.info("update{} with id{}", meal, id);
-//        assureIdConsistent(meal, id);
-//        meal.setRestaurant(restaurantRepository.getById(restaurant_id));
-//        repository.save(meal);
-//    }
-
     static final String REST_URL = "/api/admin/restaurants";
 
     protected final MealRepository repository;

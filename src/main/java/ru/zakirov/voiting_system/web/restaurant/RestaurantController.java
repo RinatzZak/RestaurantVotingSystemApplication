@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +21,11 @@ import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkNew;
 
 @RestController
 @Slf4j
-//@CacheConfig(cacheNames = "restaurant")
+@CacheConfig(cacheNames = "restaurants")
 @RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class RestaurantController {
 
-    static final String REST_URL = "/api/admin/restaurant";
+    static final String REST_URL = "/api/admin/restaurants";
 
     private final RestaurantRepository repository;
 
@@ -41,7 +40,7 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/{id}")
-//    @CacheEvict(value = "restaurant", allEntries = true)
+    @CacheEvict(value = "restaurants", allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
@@ -49,14 +48,14 @@ public class RestaurantController {
     }
 
     @GetMapping
-//    @Cacheable
+    @Cacheable
     public List<Restaurant> getAll() {
         log.info("getAll");
         return repository.findAll();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-   // @CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
         log.info("create{}", restaurant);
         checkNew(restaurant);
@@ -69,7 +68,7 @@ public class RestaurantController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-   // @CacheEvict(allEntries = true)
+    @CacheEvict(allEntries = true)
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update{} with id{}", restaurant, id);
         assureIdConsistent(restaurant, id);

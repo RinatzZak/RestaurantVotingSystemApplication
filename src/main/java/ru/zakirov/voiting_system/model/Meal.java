@@ -2,7 +2,10 @@ package ru.zakirov.voiting_system.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -17,7 +20,6 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString
 public class Meal extends BaseEntity {
 
     @Column(name = "description", nullable = false)
@@ -54,5 +56,15 @@ public class Meal extends BaseEntity {
         this.price = price;
         this.calories = calories;
         this.dateAdded = dateAdded;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "description = " + description + ", " +
+                "price = " + price + ", " +
+                "calories = " + calories + ", " +
+                "dateAdded = " + dateAdded + ")";
     }
 }

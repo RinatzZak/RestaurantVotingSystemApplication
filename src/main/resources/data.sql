@@ -15,4 +15,7 @@ VALUES ('193 Synods Street Eden Terrace', 'Kazuya'),
 INSERT INTO MEAL (calories, description, price, RESTAURANT_ID)
 VALUES (500, 'Rice with seafood', 400, 1),
        (700, 'Soup puree', 300, 2),
-       (1000, 'Royal roast beef', 700, 3);
+       (1000, 'Royal roast beef', 700, 3),
+       (100, 'Orange juice', 10, 1),
+       (100, 'Coffee', 10, 2),
+       (200, 'Milk cocktail', 20, 3);

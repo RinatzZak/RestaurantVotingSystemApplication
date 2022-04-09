@@ -2,6 +2,9 @@ package ru.zakirov.voiting_system.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -26,6 +29,7 @@ public class Restaurant extends BaseEntity {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant", orphanRemoval = true)
     @Column(name = "menu")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
     private List<Meal> menu;
 

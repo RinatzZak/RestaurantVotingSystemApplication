@@ -13,15 +13,12 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "votes")
+@Table(name = "vote")
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString(callSuper = true)
 public class Vote extends BaseEntity {
-
-    @Column(name = "voice", nullable = false, columnDefinition = "bool default true")
-    private boolean voice;
 
     @Column(name = "time", columnDefinition = "timestamp default now()")
     @NotNull
@@ -38,16 +35,14 @@ public class Vote extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    public Vote(Integer id, boolean voice, LocalTime time, Restaurant restaurant, User user) {
+    public Vote(Integer id, LocalTime time, Restaurant restaurant, User user) {
         super(id);
-        this.voice = voice;
         this.time = time;
         this.restaurant = restaurant;
         this.user = user;
     }
 
-    public Vote(boolean voice, LocalTime time, Restaurant restaurant, User user) {
-        this.voice = voice;
+    public Vote(LocalTime time, Restaurant restaurant, User user) {
         this.time = time;
         this.restaurant = restaurant;
         this.user = user;

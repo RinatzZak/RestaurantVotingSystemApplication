@@ -59,7 +59,6 @@ public class MealRestController {
 
     @PostMapping(value = "/{restaurant_id}/meals/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(allEntries = true)
     public void update(@Valid @RequestBody Meal meal, @PathVariable int id, @PathVariable int restaurant_id) {
         log.info("update {} with id {} from restaurant {}", meal, id, restaurant_id);
         assureIdConsistent(meal, id);

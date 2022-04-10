@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
-@Table(name = "restoraunt")
+@Table(name = "restaurant")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

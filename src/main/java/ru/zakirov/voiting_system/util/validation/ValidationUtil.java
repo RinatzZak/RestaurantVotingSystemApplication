@@ -6,6 +6,8 @@ import org.springframework.lang.NonNull;
 import ru.zakirov.voiting_system.HasId;
 import ru.zakirov.voiting_system.error.IllegalRequestDataException;
 
+import java.time.LocalTime;
+
 @UtilityClass
 public class ValidationUtil {
 
@@ -34,5 +36,10 @@ public class ValidationUtil {
     public static Throwable getRootCause(@NonNull Throwable t) {
         Throwable rootCause = NestedExceptionUtils.getRootCause(t);
         return rootCause != null ? rootCause : t;
+    }
+
+    public static boolean checkTime() {
+        LocalTime frontier = LocalTime.parse("17:00");
+        return LocalTime.now().isBefore(frontier);
     }
 }

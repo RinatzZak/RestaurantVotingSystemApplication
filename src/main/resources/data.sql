@@ -7,7 +7,7 @@ VALUES ('USER', 1),
        ('ADMIN', 2),
        ('USER', 2);
 
-INSERT INTO RESTORAUNT (address, description)
+INSERT INTO RESTAURANT (address, description)
 VALUES ('193 Synods Street Eden Terrace', 'Kazuya'),
        ('Commercial Bay Level 2/7 Queen Street', 'Ahi'),
        ('Level 1/12 Wyndham Street', 'Culprit');

@@ -33,10 +33,6 @@ public class Meal extends BaseEntity {
     @Range(min = 1, max = 300000)
     private BigDecimal price;
 
-    @Column(name = "calories", nullable = false)
-    @Range(min = 10, max = 5000)
-    private int calories;
-
     @Column(name = "added", nullable = false, columnDefinition = "timestamp default now()")
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
@@ -57,7 +53,6 @@ public class Meal extends BaseEntity {
         super(id);
         this.description = description;
         this.price = price;
-        this.calories = calories;
         this.dateAdded = dateAdded;
     }
 
@@ -67,7 +62,6 @@ public class Meal extends BaseEntity {
                 "id = " + id + ", " +
                 "description = " + description + ", " +
                 "price = " + price + ", " +
-                "calories = " + calories + ", " +
                 "dateAdded = " + dateAdded + ")";
     }
 }

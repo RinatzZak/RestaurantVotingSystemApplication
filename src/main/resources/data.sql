@@ -12,10 +12,14 @@ VALUES ('193 Synods Street Eden Terrace', 'Kazuya'),
        ('Commercial Bay Level 2/7 Queen Street', 'Ahi'),
        ('Level 1/12 Wyndham Street', 'Culprit');
 
-INSERT INTO MEAL (calories, description, price, RESTAURANT_ID)
-VALUES (500, 'Rice with seafood', 400, 1),
-       (700, 'Soup puree', 300, 2),
-       (1000, 'Royal roast beef', 700, 3),
-       (100, 'Orange juice', 10, 1),
-       (100, 'Coffee', 10, 2),
-       (200, 'Milk cocktail', 20, 3);
+INSERT INTO MEAL (description, price, RESTAURANT_ID)
+VALUES ('Rice with seafood', 400, 1),
+       ('Soup puree', 300, 2),
+       ('Royal roast beef', 700, 3),
+       ('Orange juice', 10, 1),
+       ('Coffee', 10, 2),
+       ('Milk cocktail', 20, 3),
+       ('Orange ice cream', 50, 1),
+       ('Cherry ice cream', 55, 2),
+       ('Apple ice cream', 51, 3);
+

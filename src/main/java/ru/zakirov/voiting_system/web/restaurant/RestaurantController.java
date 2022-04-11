@@ -55,6 +55,12 @@ public class RestaurantController {
         return repository.findAll();
     }
 
+   @GetMapping("/{id}/menu")
+    public ResponseEntity<Restaurant> getWithMeals(@PathVariable int id) {
+        log.info("get restaurant{} with menu", id);
+        return ResponseEntity.of(repository.getWithMeals(id));
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @CacheEvict(allEntries = true)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {

@@ -1,4 +1,4 @@
-package ru.zakirov.voiting_system.web.Vote;
+package ru.zakirov.voiting_system.web.vote;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,6 +37,7 @@ public class VoteRestController {
 
     @GetMapping("/api/profile/votes")
     public List<Vote> getAll() {
+        log.info("getAll");
         return voteRepository.findAll();
     }
 
@@ -70,7 +71,7 @@ public class VoteRestController {
             vote.setRestaurant(restaurantRepository.getById(restaurant_id));
             voteRepository.save(vote);
         } else {
-            throw new Exception("It's already 11! No no no, you can't change your choose after 11");
+            throw new Exception("No no no, you can't change your choose after 11!");
         }
     }
 }

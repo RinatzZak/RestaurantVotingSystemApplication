@@ -1,7 +1,10 @@
 package ru.zakirov.voiting_system.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -15,7 +18,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(callSuper = true)
 public class Restaurant extends BaseEntity {
 
     @Column(name = "description", unique = true)
@@ -27,7 +29,7 @@ public class Restaurant extends BaseEntity {
     @NotBlank
     private String address;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "restaurant", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant", orphanRemoval = true)
     @Column(name = "menu")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
@@ -44,5 +46,13 @@ public class Restaurant extends BaseEntity {
         this.description = description;
         this.menu = menu;
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "(" +
+                "id = " + id + ", " +
+                "description = " + description + ", " +
+                "address = " + address + ")";
     }
 }

@@ -23,14 +23,14 @@ import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkNew;
 @RestController
 @Slf4j
 @CacheConfig(cacheNames = "restaurants")
-@RequestMapping(value = RestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantController {
+@RequestMapping(value = RestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestaurantRestController {
 
     static final String REST_URL = "/api/admin/restaurants";
 
     private final RestaurantRepository repository;
 
-    public RestaurantController(RestaurantRepository repository) {
+    public RestaurantRestController(RestaurantRepository repository) {
         this.repository = repository;
     }
 
@@ -49,7 +49,7 @@ public class RestaurantController {
     }
 
     @GetMapping
-    @Cacheable("api/profile/restaurants")
+    @Cacheable
     public List<Restaurant> getAll() {
         log.info("getAll");
         return repository.findAll();
@@ -78,7 +78,7 @@ public class RestaurantController {
     @CacheEvict(allEntries = true)
     @Transactional
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
-        log.info("update{} with id{}", restaurant, id);
+        log.info("update restaurant with id{}", id);
         assureIdConsistent(restaurant, id);
         repository.save(restaurant);
     }

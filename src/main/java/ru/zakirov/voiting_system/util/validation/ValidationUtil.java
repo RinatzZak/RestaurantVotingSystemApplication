@@ -17,7 +17,6 @@ public class ValidationUtil {
         }
     }
 
-    //  Conservative when you reply, but accept liberally (http://stackoverflow.com/a/32728226/548473)
     public static void assureIdConsistent(HasId bean, int id) {
         if (bean.isNew()) {
             bean.setId(id);
@@ -39,7 +38,7 @@ public class ValidationUtil {
     }
 
     public static boolean checkTime() {
-        LocalTime frontier = LocalTime.parse("17:00");
+        LocalTime frontier = LocalTime.parse("11:00");
         return LocalTime.now().isBefore(frontier);
     }
 }

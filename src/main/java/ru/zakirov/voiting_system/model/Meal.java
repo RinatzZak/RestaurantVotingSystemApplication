@@ -38,18 +38,17 @@ public class Meal extends BaseEntity {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Date dateAdded = new Date();
 
-    @ManyToOne(optional = true,
-    fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference
     private Restaurant restaurant;
 
-    public Meal(String description, BigDecimal price, int calories, Date dateAdded) {
-        this(null, description, price, calories, dateAdded);
+    public Meal(String description, BigDecimal price, Date dateAdded) {
+        this(null, description, price, dateAdded);
     }
 
-    public Meal(Integer id, String description, BigDecimal price, int calories, Date dateAdded) {
+    public Meal(Integer id, String description, BigDecimal price, Date dateAdded) {
         super(id);
         this.description = description;
         this.price = price;

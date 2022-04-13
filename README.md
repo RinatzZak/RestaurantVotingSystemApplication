@@ -1,7 +1,8 @@
-#Restaurant Voting System App
+# Restaurant Voting System App
 
 ---
-###Task:
+
+### Task:
 Design and implement a REST API using Hibernate/Spring/SpringMVC (or Spring-Boot) without frontend.
 
 The task is:
@@ -18,18 +19,18 @@ If it is before 11:00 we assume that he changed his mind.
 If it is after 11:00 then it is too late, vote can't be changed
 Each restaurant provides a new menu each day.
 
-###Stack: 
+### Stack: 
 [JDK 17](http://jdk.java.net/17/), Spring Boot 2.5, Lombok, H2, Swagger/OpenAPI 3.0
 
 ---
 
-###Run: 
+### Run: 
 `mvn spring-boot:run` in root directory.
 
 ---
 
-###[REST API documentation](http://localhost:8080/swagger-ui.html)  
-Креденшелы:
+### [REST API documentation](http://localhost:8080/swagger-ui.html)  
+* Креденшелы:
 ```
 User:  user@yandex.ru / password
 Admin: admin@gmail.com / admin

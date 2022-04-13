@@ -1,6 +1,9 @@
 package ru.zakirov.voiting_system.web.vote;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,7 @@ import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkTime
 
 @RestController
 @Slf4j
+@CacheConfig(cacheNames = "votes")
 public class VoteRestController {
 
     private final VoteRepository voteRepository;
@@ -29,29 +33,30 @@ public class VoteRestController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/api/profile/{user_id}/votes")
-    public Vote get(@PathVariable int user_id) {
-        log.info("take vote for user{}", user_id);
-        return voteRepository.findByUserId(user_id);
-    }
-
     @GetMapping("/api/profile/votes")
     public List<Vote> getAll() {
         log.info("getAll");
         return voteRepository.findAll();
     }
 
+    @SneakyThrows
     @DeleteMapping("/api/profile/{user_id}/votes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int user_id) {
-        voteRepository.delete(voteRepository.findByUserId(user_id));
+        if (checkTime()) {
+            voteRepository.delete(voteRepository.findByUserId(user_id));
+        } else {
+            throw new Exception("You can't change your vote  after 11!");
+        }
     }
 
+    @SneakyThrows
     @PostMapping("/api/profile/{user_id}/votes/{restaurant_id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void create(@PathVariable int user_id, @PathVariable int restaurant_id) throws Exception {
+    @ResponseStatus(HttpStatus.CREATED)
+    @CacheEvict(allEntries = true)
+    public void create(@PathVariable int user_id, @PathVariable int restaurant_id) {
         Vote vote = voteRepository.findByUserId(user_id);
-        if (vote == null) {
+        if (vote.isNew()) {
             log.info("add voice by user{} for restaurant{}", user_id, restaurant_id);
             vote = new Vote(LocalTime.now(), restaurantRepository.getById(restaurant_id),
                     userRepository.getById(user_id));
@@ -61,13 +66,16 @@ public class VoteRestController {
         }
     }
 
+    @SneakyThrows
     @PutMapping("/api/profile/{user_id}/votes/{restaurant_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@PathVariable int user_id, @PathVariable int restaurant_id) throws Exception {
+    @CacheEvict(allEntries = true)
+    public void update(@PathVariable int user_id, @PathVariable int restaurant_id) {
         Vote vote = voteRepository.findByUserId(user_id);
-        if (vote != null && checkTime()) {
+        if (!vote.isNew() && checkTime()) {
             log.info("update voice by user{} for restaurant{}", user_id, restaurant_id);
+            vote.setTime(LocalTime.now());
             vote.setRestaurant(restaurantRepository.getById(restaurant_id));
             voteRepository.save(vote);
         } else {

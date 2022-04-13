@@ -1,8 +1,6 @@
 package ru.zakirov.voiting_system.web.meal;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +12,6 @@ import ru.zakirov.voiting_system.repository.RestaurantRepository;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 import static ru.zakirov.voiting_system.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkNew;
@@ -33,19 +30,13 @@ public class MealRestController {
         this.restaurantRepository = restaurantRepository;
     }
 
-    @GetMapping("/{restaurant_id}/meals")
-    public List<Meal> getAll(@PathVariable int restaurant_id) {
-        log.info("getAll for restaurant {}", restaurant_id);
-        return repository.getAllByRestaurantId(restaurant_id);
-    }
-
-    @GetMapping("meals/{id}")
+    @GetMapping("/meals/{id}")
     public ResponseEntity<Meal> get(@PathVariable int id) {
         log.info("get {}", id);
         return ResponseEntity.of(repository.findById(id));
     }
 
-    @PostMapping( value = "/{restaurant_id}/meals", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{restaurant_id}/meals", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Meal> createWithLocation(@Valid @RequestBody Meal meal, @PathVariable int restaurant_id) {
         log.info("create{} for restaurant {}", meal, restaurant_id);
         checkNew(meal);

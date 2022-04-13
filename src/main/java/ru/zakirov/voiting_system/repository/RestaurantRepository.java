@@ -10,8 +10,6 @@ import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
-    Optional<Restaurant> findByDescriptionIgnoreCase(String description);
-
     @EntityGraph(attributePaths = {"menu"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Restaurant r WHERE r.id=?1")
     Optional<Restaurant> getWithMeals(int id);

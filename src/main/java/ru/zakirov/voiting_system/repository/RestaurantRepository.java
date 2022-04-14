@@ -9,7 +9,7 @@ import ru.zakirov.voiting_system.model.Restaurant;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
-public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
+public interface RestaurantRepository extends BaseRepository<Restaurant> {
     @EntityGraph(attributePaths = {"menu"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT r FROM Restaurant r WHERE r.id=?1")
     Optional<Restaurant> getWithMeals(int id);

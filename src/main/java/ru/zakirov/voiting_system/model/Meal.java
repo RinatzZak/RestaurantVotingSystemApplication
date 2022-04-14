@@ -1,6 +1,7 @@
 package ru.zakirov.voiting_system.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,7 +22,6 @@ import java.util.Date;
 @Table(name = "meal")
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Meal extends BaseEntity {
 
     @Column(name = "description", nullable = false)
@@ -30,6 +30,7 @@ public class Meal extends BaseEntity {
     private String description;
 
     @Column(name = "price", nullable = false)
+    @NotNull
     @Range(min = 1, max = 300000)
     private BigDecimal price;
 
@@ -43,6 +44,8 @@ public class Meal extends BaseEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference
     private Restaurant restaurant;
+
+    public Meal() {}
 
     public Meal(String description, BigDecimal price, Date dateAdded) {
         this(null, description, price, dateAdded);

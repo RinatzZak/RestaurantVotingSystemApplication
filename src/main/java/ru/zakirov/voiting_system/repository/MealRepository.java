@@ -7,5 +7,4 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 public interface MealRepository extends BaseRepository<Meal> {
-    List<Meal> getAllByRestaurantId(int restaurant_id);
 }

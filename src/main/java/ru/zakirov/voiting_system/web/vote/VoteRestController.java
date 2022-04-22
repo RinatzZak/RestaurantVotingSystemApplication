@@ -54,13 +54,12 @@ public class VoteRestController {
     public void create(@PathVariable int user_id, @PathVariable int restaurant_id) {
         Vote vote = voteRepository.findByUserId(user_id);
         checkEmpty(vote);
-            log.info("add voice by user{} for restaurant{}", user_id, restaurant_id);
-            vote = new Vote(LocalTime.now(), restaurantRepository.getById(restaurant_id),
-                    userRepository.getById(user_id));
-            voteRepository.save(vote);
+        log.info("add voice by user{} for restaurant{}", user_id, restaurant_id);
+        vote = new Vote(LocalTime.now(), restaurantRepository.getById(restaurant_id),
+                userRepository.getById(user_id));
+        voteRepository.save(vote);
     }
 
-    @SneakyThrows
     @PutMapping("/api/profile/{user_id}/votes/{restaurant_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
@@ -68,9 +67,9 @@ public class VoteRestController {
     public void update(@PathVariable int user_id, @PathVariable int restaurant_id) {
         Vote vote = voteRepository.findByUserId(user_id);
         checkTime(vote.getTimeAdded());
-            log.info("update voice by user{} for restaurant{}", user_id, restaurant_id);
-            vote.setTimeAdded(LocalTime.now());
-            vote.setRestaurant(restaurantRepository.getById(restaurant_id));
-            voteRepository.save(vote);
+        log.info("update voice by user{} for restaurant{}", user_id, restaurant_id);
+        vote.setTimeAdded(LocalTime.now());
+        vote.setRestaurant(restaurantRepository.getById(restaurant_id));
+        voteRepository.save(vote);
     }
 }

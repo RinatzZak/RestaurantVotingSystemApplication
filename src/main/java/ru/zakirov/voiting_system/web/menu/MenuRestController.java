@@ -2,6 +2,7 @@ package ru.zakirov.voiting_system.web.menu;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +39,14 @@ public class MenuRestController {
     }
 
     @DeleteMapping("/api/admin/restaurants/{restaurant_id}/menu/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurant_id, @PathVariable int id) {
         log.info("delete menu for restaurant{}", restaurant_id);
         menuRepository.deleteExisted(id);
     }
 
     @GetMapping("/api/profile/restaurants/{restaurant_id}/menu")
+    @CacheEvict(allEntries = true)
     public Menu getForRestaurant(@PathVariable int restaurant_id) {
         return menuRepository.getByRestaurantId(restaurant_id);
     }
@@ -86,6 +89,4 @@ public class MenuRestController {
         menu.getMeals().add(mealRepository.getById(meals_id));
         menuRepository.save(menu);
     }
-
-
 }

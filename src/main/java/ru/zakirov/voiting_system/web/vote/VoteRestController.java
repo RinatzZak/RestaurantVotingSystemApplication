@@ -15,6 +15,7 @@ import ru.zakirov.voiting_system.repository.VoteRepository;
 import java.time.LocalTime;
 import java.util.List;
 
+import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkEmpty;
 import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkTime;
 
 @RestController
@@ -43,27 +44,20 @@ public class VoteRestController {
     @DeleteMapping("/api/profile/{user_id}/votes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int user_id) {
-        if (checkTime()) {
-            voteRepository.delete(voteRepository.findByUserId(user_id));
-        } else {
-            throw new Exception("You can't change your vote  after 11!");
-        }
+        checkTime(voteRepository.findByUserId(user_id).getTimeAdded());
+        voteRepository.delete(voteRepository.findByUserId(user_id));
     }
 
-    @SneakyThrows
     @PostMapping("/api/profile/{user_id}/votes/{restaurant_id}")
     @ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(allEntries = true)
     public void create(@PathVariable int user_id, @PathVariable int restaurant_id) {
         Vote vote = voteRepository.findByUserId(user_id);
-        if (vote.isNew()) {
+        checkEmpty(vote);
             log.info("add voice by user{} for restaurant{}", user_id, restaurant_id);
             vote = new Vote(LocalTime.now(), restaurantRepository.getById(restaurant_id),
                     userRepository.getById(user_id));
             voteRepository.save(vote);
-        } else {
-            throw new Exception("You already voted!");
-        }
     }
 
     @SneakyThrows
@@ -73,13 +67,10 @@ public class VoteRestController {
     @CacheEvict(allEntries = true)
     public void update(@PathVariable int user_id, @PathVariable int restaurant_id) {
         Vote vote = voteRepository.findByUserId(user_id);
-        if (!vote.isNew() && checkTime()) {
+        checkTime(vote.getTimeAdded());
             log.info("update voice by user{} for restaurant{}", user_id, restaurant_id);
-            vote.setTime(LocalTime.now());
+            vote.setTimeAdded(LocalTime.now());
             vote.setRestaurant(restaurantRepository.getById(restaurant_id));
             voteRepository.save(vote);
-        } else {
-            throw new Exception("No no no, you can't change your choose after 11!");
-        }
     }
 }

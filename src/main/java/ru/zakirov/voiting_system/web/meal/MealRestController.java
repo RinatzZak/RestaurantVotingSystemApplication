@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.zakirov.voiting_system.model.Meal;
 import ru.zakirov.voiting_system.repository.MealRepository;
-import ru.zakirov.voiting_system.repository.RestaurantRepository;
-import ru.zakirov.voiting_system.to.MealTo;
-import ru.zakirov.voiting_system.util.validation.MealUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -29,7 +26,7 @@ public class MealRestController {
     protected final MealRepository repository;
 
 
-    public MealRestController(MealRepository repository, RestaurantRepository restaurantRepository) {
+    public MealRestController(MealRepository repository) {
         this.repository = repository;
     }
 
@@ -44,10 +41,10 @@ public class MealRestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Meal> createWithLocation(@Valid @RequestBody MealTo mealTo) {
-        log.info("create{}", mealTo);
-        checkNew(mealTo);
-        Meal created = repository.save(MealUtil.createNewFromTo(mealTo));
+    public ResponseEntity<Meal> createWithLocation(@Valid @RequestBody Meal meal) {
+        log.info("create{}", meal);
+        checkNew(meal);
+        Meal created = repository.save(meal);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -57,17 +54,18 @@ public class MealRestController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@Valid @RequestBody MealTo mealTo, @PathVariable int id) {
-        log.info("update {} with id {}", mealTo, id);
-        assureIdConsistent(mealTo, id);
-        Meal meal = repository.getById(id);
-        repository.save(MealUtil.updateFromTo(meal, mealTo));
+    public void update(@Valid @RequestBody Meal meal, @PathVariable int id) {
+        log.info("update {} with id {}", meal, id);
+        assureIdConsistent(meal, id);
+        meal.setDescription(meal.getDescription());
+        meal.setPrice(meal.getPrice());
+        repository.save(meal);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
-        repository.deleteById(id);
+        repository.deleteExisted(id);
     }
 }

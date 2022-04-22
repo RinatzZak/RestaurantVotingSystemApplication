@@ -37,8 +37,16 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-    public static boolean checkTime() {
+    public static void checkTime(LocalTime time) {
         LocalTime frontier = LocalTime.parse("11:00");
-        return LocalTime.now().isBefore(frontier);
+        if (time.isAfter(frontier)) {
+            throw new IllegalRequestDataException("You can't change your vote  after 11!");
+        }
+    }
+
+    public static void checkEmpty(Object e) {
+        if (e != null) {
+            throw new IllegalRequestDataException("You have already voted");
+        }
     }
 }

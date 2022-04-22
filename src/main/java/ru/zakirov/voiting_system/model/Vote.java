@@ -1,5 +1,6 @@
 package ru.zakirov.voiting_system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -20,10 +21,10 @@ import java.time.LocalTime;
 @Setter
 public class Vote extends BaseEntity {
 
-    @Column(name = "time", columnDefinition = "timestamp default now()")
+    @Column(name = "time_added", columnDefinition = "timestamp default now()")
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalTime time;
+    private LocalTime timeAdded;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")
@@ -34,17 +35,18 @@ public class Vote extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private User user;
 
-    public Vote(Integer id, LocalTime time, Restaurant restaurant, User user) {
+    public Vote(Integer id, LocalTime timeAdded, Restaurant restaurant, User user) {
         super(id);
-        this.time = time;
+        this.timeAdded = timeAdded;
         this.restaurant = restaurant;
         this.user = user;
     }
 
     public Vote(LocalTime time, Restaurant restaurant, User user) {
-        this.time = time;
+        this.timeAdded = time;
         this.restaurant = restaurant;
         this.user = user;
     }
@@ -53,6 +55,6 @@ public class Vote extends BaseEntity {
     public String toString() {
         return getClass().getSimpleName() + "(" +
                 "id = " + id + ", " +
-                "time = " + time + ")";
+                "time = " + timeAdded + ")";
     }
 }

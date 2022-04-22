@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.zakirov.voiting_system.model.Restaurant;
 import ru.zakirov.voiting_system.repository.RestaurantRepository;
-import ru.zakirov.voiting_system.to.RestaurantTo;
-import ru.zakirov.voiting_system.util.RestaurantUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -51,10 +49,10 @@ public class RestaurantRestController {
 
     @PostMapping(value = "/api/admin/restaurants", consumes = MediaType.APPLICATION_JSON_VALUE)
     @CacheEvict(allEntries = true)
-    public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody RestaurantTo restaurantTo) {
-        log.info("create{}", restaurantTo);
-        checkNew(restaurantTo);
-        Restaurant created = repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
+    public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
+        log.info("create{}", restaurant);
+        checkNew(restaurant);
+        Restaurant created = repository.save(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/admin/restaurants")
                 .buildAndExpand(created.getId()).toUri();
@@ -65,10 +63,11 @@ public class RestaurantRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(allEntries = true)
     @Transactional
-    public void update(@Valid @RequestBody RestaurantTo restaurantTo, @PathVariable int id) {
+    public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update restaurant with id{}", id);
-        assureIdConsistent(restaurantTo, id);
-        Restaurant restaurant = repository.getById(id);
-        repository.save(RestaurantUtil.updateFromTo(restaurant, restaurantTo));
+        assureIdConsistent(restaurant, id);
+        restaurant.setDescription(restaurant.getDescription());
+        restaurant.setAddress(restaurant.getAddress());
+        repository.save(restaurant);
     }
 }

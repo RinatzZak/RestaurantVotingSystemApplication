@@ -15,54 +15,56 @@ import ru.zakirov.voiting_system.util.validation.MealUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 import static ru.zakirov.voiting_system.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkNew;
 
 @RestController
 @Slf4j
-@RequestMapping(value = MealRestController.REST_URL, consumes = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = MealRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class MealRestController {
-    static final String REST_URL = "/api/admin/restaurants";
+    static final String REST_URL = "/api/admin/meals";
 
     protected final MealRepository repository;
-    protected final RestaurantRepository restaurantRepository;
+
 
     public MealRestController(MealRepository repository, RestaurantRepository restaurantRepository) {
         this.repository = repository;
-        this.restaurantRepository = restaurantRepository;
     }
 
-    @GetMapping("/{restaurant_id}/meals/{id}")
-    public ResponseEntity<Meal> get(@PathVariable int restaurant_id, @PathVariable int id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<Meal> get(@PathVariable int id) {
         return ResponseEntity.of(repository.findById(id));
     }
 
-    @PostMapping(value = "/{restaurant_id}/meals", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Meal> createWithLocation(@Valid @RequestBody MealTo mealTo, @PathVariable int restaurant_id) {
-        log.info("create{} for restaurant {}", mealTo, restaurant_id);
+    @GetMapping
+    public List<Meal> getAll() {
+        return repository.findAll();
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Meal> createWithLocation(@Valid @RequestBody MealTo mealTo) {
+        log.info("create{}", mealTo);
         checkNew(mealTo);
         Meal created = repository.save(MealUtil.createNewFromTo(mealTo));
-        created.setRestaurant(restaurantRepository.getById(restaurant_id));
-        repository.save(created);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PutMapping(value = "/{restaurant_id}/meals/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@Valid @RequestBody MealTo mealTo, @PathVariable int id, @PathVariable int restaurant_id) {
-        log.info("update {} with id {} from restaurant {}", mealTo, id, restaurant_id);
+    public void update(@Valid @RequestBody MealTo mealTo, @PathVariable int id) {
+        log.info("update {} with id {}", mealTo, id);
         assureIdConsistent(mealTo, id);
         Meal meal = repository.getById(id);
-        meal.setRestaurant(restaurantRepository.getById(restaurant_id));
         repository.save(MealUtil.updateFromTo(meal, mealTo));
     }
 
-    @DeleteMapping("/meals/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);

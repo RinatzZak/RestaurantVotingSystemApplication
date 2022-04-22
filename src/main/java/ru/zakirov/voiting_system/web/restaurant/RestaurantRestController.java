@@ -49,12 +49,6 @@ public class RestaurantRestController {
         return repository.findAll();
     }
 
-   @GetMapping("/api/profile/restaurants{id}/menu")
-    public ResponseEntity<Restaurant> getWithMeals(@PathVariable int id) {
-        log.info("get restaurant{} with menu", id);
-        return ResponseEntity.of(repository.getWithMeals(id));
-    }
-
     @PostMapping(value = "/api/admin/restaurants", consumes = MediaType.APPLICATION_JSON_VALUE)
     @CacheEvict(allEntries = true)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody RestaurantTo restaurantTo) {
@@ -62,7 +56,7 @@ public class RestaurantRestController {
         checkNew(restaurantTo);
         Restaurant created = repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/admin/restaurants/{id}")
+                .path("/api/admin/restaurants")
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }

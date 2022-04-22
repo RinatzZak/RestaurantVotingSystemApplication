@@ -27,13 +27,13 @@ spring:
       is-getter: none
 
   cache:
-    cache-names: users, restaurants, votes
+    cache-names: users, restaurants, votes, menus
     caffeine.spec: maximumSize=1,expireAfterAccess=60s
 
 logging:
   level:
     root: WARN
-    ru.zakirov.voting_system: DEBUG
+    ru.zakirov.voiting_system: debug
     org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
 
 server.servlet:

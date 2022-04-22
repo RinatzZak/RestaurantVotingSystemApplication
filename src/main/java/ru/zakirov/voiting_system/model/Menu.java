@@ -25,6 +25,7 @@ public class Menu extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "restaurant_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Restaurant restaurant;
 

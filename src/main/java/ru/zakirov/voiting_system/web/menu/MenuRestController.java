@@ -13,6 +13,7 @@ import ru.zakirov.voiting_system.repository.MealRepository;
 import ru.zakirov.voiting_system.repository.MenuRepository;
 import ru.zakirov.voiting_system.repository.RestaurantRepository;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -54,7 +55,7 @@ public class MenuRestController {
     @GetMapping("/api/admin/menus")
     public List<Menu> getAll() {
         log.info("getAll");
-        return  menuRepository.findAll();
+        return menuRepository.findAll();
     }
 
     @PostMapping("/api/admin/restaurants/{restaurant_id}/menu")
@@ -73,7 +74,7 @@ public class MenuRestController {
 
     @PutMapping("/api/admin/restaurants/{restaurant_id}/menu/{menu_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update (@Valid @RequestBody Menu menu, @PathVariable int menu_id, @PathVariable int restaurant_id) {
+    public void update(@Valid @RequestBody Menu menu, @PathVariable int menu_id, @PathVariable int restaurant_id) {
         log.info("update menu for restaurant{}", restaurant_id);
         assureIdConsistent(menu, menu_id);
         menu.setDateAdded(menu.getDateAdded());
@@ -81,12 +82,22 @@ public class MenuRestController {
         menuRepository.save(menu);
     }
 
-    @PatchMapping("/api/admin/restaurants/{restaurant_id}/menu/meals/{meals_id}")
+    @PostMapping("/api/admin/restaurants/{restaurant_id}/menu/meals/{meals_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addingMealsToMenu(@PathVariable int restaurant_id, @PathVariable int meals_id) {
+    public void addingMealToMenu(@PathVariable int restaurant_id, @PathVariable int meals_id) {
         log.info("add meal{} to menu from restaurant{}", meals_id, restaurant_id);
         Menu menu = getForRestaurant(restaurant_id);
         menu.getMeals().add(mealRepository.getById(meals_id));
+        menuRepository.save(menu);
+    }
+
+    @PostMapping("/api/admin/restaurants/{restaurant_id}/menu/meals/{meals_id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void removingMealFromMenu(@PathVariable int restaurant_id, @PathVariable int meals_id) {
+        log.info("delete meal{} from restaurant{} menu", meals_id, restaurant_id);
+        Menu menu = getForRestaurant(restaurant_id);
+        menu.getMeals().remove(mealRepository.getById(meals_id));
         menuRepository.save(menu);
     }
 }

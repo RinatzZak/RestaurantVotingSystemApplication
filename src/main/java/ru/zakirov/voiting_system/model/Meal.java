@@ -31,6 +31,10 @@ public class Meal extends BaseEntity {
     public Meal() {
     }
 
+    public Meal(Meal m) {
+        this(m.id, m.description, m.price);
+    }
+
     public Meal(String description, BigDecimal price) {
         this(null, description, price);
     }

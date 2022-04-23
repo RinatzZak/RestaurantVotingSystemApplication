@@ -13,6 +13,7 @@ import ru.zakirov.voiting_system.repository.MealRepository;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.zakirov.voiting_system.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkNew;
@@ -32,7 +33,7 @@ public class MealRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Meal> get(@PathVariable int id) {
-        return ResponseEntity.of(repository.findById(id));
+        return ResponseEntity.of(Objects.requireNonNull(repository.findById(id)));
     }
 
     @GetMapping

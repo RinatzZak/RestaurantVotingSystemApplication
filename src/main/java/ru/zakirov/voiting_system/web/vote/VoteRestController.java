@@ -1,9 +1,9 @@
 package ru.zakirov.voiting_system.web.vote;
 
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +15,7 @@ import ru.zakirov.voiting_system.repository.VoteRepository;
 import java.time.LocalTime;
 import java.util.List;
 
-import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkEmpty;
-import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkTime;
+import static ru.zakirov.voiting_system.util.validation.ValidationUtil.*;
 
 @RestController
 @Slf4j
@@ -35,12 +34,12 @@ public class VoteRestController {
     }
 
     @GetMapping("/api/profile/votes")
+    @Cacheable
     public List<Vote> getAll() {
         log.info("getAll");
         return voteRepository.findAll();
     }
 
-    @SneakyThrows
     @DeleteMapping("/api/profile/{user_id}/votes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int user_id) {

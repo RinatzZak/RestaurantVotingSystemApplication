@@ -37,7 +37,7 @@ public class RestaurantRestController {
         this.menuRepository = menuRepository;
     }
 
-    @GetMapping("/api/admin/restaurants/{id}")
+    @GetMapping("/api/restaurants/{id}")
     public ResponseEntity<Restaurant> get(@PathVariable int id) {
         log.info("get{}", id);
         return ResponseEntity.of(Objects.requireNonNull(repository.findById(id)));
@@ -53,7 +53,7 @@ public class RestaurantRestController {
         repository.deleteExisted(id);
     }
 
-    @GetMapping("/api/profile/restaurants")
+    @GetMapping("/api/restaurants")
     public List<Restaurant> getAll() {
         log.info("getAll");
         return repository.findAll();

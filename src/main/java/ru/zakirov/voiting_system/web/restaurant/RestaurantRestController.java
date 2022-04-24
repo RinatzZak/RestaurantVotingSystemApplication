@@ -3,19 +3,21 @@ package ru.zakirov.voiting_system.web.restaurant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import ru.zakirov.voiting_system.model.Menu;
 import ru.zakirov.voiting_system.model.Restaurant;
+import ru.zakirov.voiting_system.repository.MenuRepository;
 import ru.zakirov.voiting_system.repository.RestaurantRepository;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.zakirov.voiting_system.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkNew;
@@ -28,20 +30,30 @@ public class RestaurantRestController {
 
     private final RestaurantRepository repository;
 
-    public RestaurantRestController(RestaurantRepository repository) {
+    private final MenuRepository menuRepository;
+
+    public RestaurantRestController(RestaurantRepository repository, MenuRepository menuRepository) {
         this.repository = repository;
+        this.menuRepository = menuRepository;
+    }
+
+    @GetMapping("/api/admin/restaurants/{id}")
+    public ResponseEntity<Restaurant> get(@PathVariable int id) {
+        log.info("get{}", id);
+        return ResponseEntity.of(Objects.requireNonNull(repository.findById(id)));
     }
 
     @DeleteMapping("/api/admin/restaurants/{id}")
-    @CacheEvict(value = "restaurants", allEntries = true)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
+        menuRepository.delete(menuRepository.getByRestaurantId(id));
+        menuRepository.flush();
         repository.deleteExisted(id);
     }
 
     @GetMapping("/api/profile/restaurants")
-    @Cacheable
     public List<Restaurant> getAll() {
         log.info("getAll");
         return repository.findAll();
@@ -61,7 +73,6 @@ public class RestaurantRestController {
 
     @PutMapping(value = "/api/admin/restaurants/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @CacheEvict(allEntries = true)
     @Transactional
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update restaurant with id{}", id);

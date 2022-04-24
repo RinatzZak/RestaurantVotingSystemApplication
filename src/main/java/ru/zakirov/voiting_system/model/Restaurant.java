@@ -22,9 +22,14 @@ public class Restaurant extends BaseEntity {
 
     @Column(name = "address")
     @NotBlank
+    @Size(min = 5, max = 100)
     private String address;
 
     public Restaurant() {
+    }
+
+    public Restaurant(Restaurant r) {
+        this(r.id, r.description, r.address);
     }
 
     public Restaurant(String description, String address) {

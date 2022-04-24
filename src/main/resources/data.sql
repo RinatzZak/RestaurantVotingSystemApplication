@@ -13,26 +13,29 @@ VALUES ('193 Synods Street Eden Terrace', 'Kazuya'),
        ('Level 1/12 Wyndham Street', 'Culprit');
 
 INSERT INTO MEALS (description, price)
-VALUES ('Rice with seafood', 400),
-       ('Soup puree', 300),
-       ('Royal roast beef', 600),
-       ('Orange juice', 10),
-       ('Coffee', 10),
-       ('Milk cocktail', 20),
-       ('Orange ice cream', 50),
-       ('Cherry ice cream', 55),
-       ('Apple ice cream', 51);
+VALUES ('Rice with seafood', 400.00),
+       ('Soup puree', 300.00),
+       ('Royal roast beef', 600.00),
+       ('Orange juice', 10.00),
+       ('Coffee', 10.00),
+       ('Milk cocktail', 20.00),
+       ('Orange ice cream', 50.00),
+       ('Cherry ice cream', 55.00),
+       ('Apple ice cream', 51.00);
 
 
 INSERT INTO MENU (RESTAURANT_ID)
-VALUES ( 1 ),
+VALUES (1),
        (3),
        (2);
 
-INSERT INTO MENU_MEAL(menu_id, meal_id)
+INSERT INTO MENU_MEAL(menu_id, meals_id)
 VALUES (1, 1),
        (1, 2),
        (1, 5),
        (3, 1),
        (3, 3),
-       (3, 6);
+       (3, 6),
+       (2, 6),
+       (2, 8),
+       (2, 9);

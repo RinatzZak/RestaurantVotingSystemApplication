@@ -6,11 +6,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "menu")
@@ -24,20 +25,19 @@ public class Menu extends BaseEntity {
     private Date dateAdded = new Date();
 
     @OneToOne
-    @JoinColumn(name = "restaurant_id")
+    @JoinColumn
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Restaurant restaurant;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable
             (
                     name = "menu_meal",
                     joinColumns = @JoinColumn(name = "menu_id", nullable = false),
-                    inverseJoinColumns = @JoinColumn(name = "meal_id", nullable = false)
+                    inverseJoinColumns = @JoinColumn(name = "meals_id")
             )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private List<Meal> meals;
+    private List<Meal> meals = new ArrayList<>();
 
     public Menu(Integer id, Date dateAdded) {
         super(id);
@@ -47,14 +47,10 @@ public class Menu extends BaseEntity {
     public Menu() {
     }
 
-    public Menu(Integer id, Date dateAdded, Restaurant restaurant, Set<Meal> meals) {
+    public Menu(Integer id, Date dateAdded, Restaurant restaurant, List<Meal> meals) {
         super(id);
         this.dateAdded = dateAdded;
         this.restaurant = restaurant;
         setMeals(meals);
-    }
-
-    public void setMeals(Collection<Meal> meals) {
-        this.meals = CollectionUtils.isEmpty(meals) ? new ArrayList<>() : List.copyOf(meals);
     }
 }

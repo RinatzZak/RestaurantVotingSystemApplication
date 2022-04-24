@@ -43,6 +43,8 @@ public class MenuRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int restaurant_id, @PathVariable int id) {
         log.info("delete menu for restaurant{}", restaurant_id);
+        Menu menu = menuRepository.getById(id);
+        menu.setRestaurant(null);
         menuRepository.deleteExisted(id);
     }
 
@@ -62,9 +64,9 @@ public class MenuRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Menu> createWithLocation(@Valid @RequestBody Menu menu, @PathVariable int restaurant_id) {
         log.info("create{} for restaurant{}", menu, restaurant_id);
-        checkNew(getForRestaurant(restaurant_id));
+        checkNew(menu.getRestaurant()); // НАДО ПЕРЕДЕЛАТЬ! ошибка при создании нового меню.`
         menu.setRestaurant(restaurantRepository.getById(restaurant_id));
-        menu.setMeals(null);
+        menu.setMeals(menu.getMeals());
         Menu created = menuRepository.save(menu);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/admin/restaurants/{restaurant_id}/menu")
@@ -82,7 +84,7 @@ public class MenuRestController {
         menuRepository.save(menu);
     }
 
-    @PostMapping("/api/admin/restaurants/{restaurant_id}/menu/meals/{meals_id}")
+    @PutMapping("/api/admin/restaurants/{restaurant_id}/menu/meals/{meals_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addingMealToMenu(@PathVariable int restaurant_id, @PathVariable int meals_id) {
         log.info("add meal{} to menu from restaurant{}", meals_id, restaurant_id);

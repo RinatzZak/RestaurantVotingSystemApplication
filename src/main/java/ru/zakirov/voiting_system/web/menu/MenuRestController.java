@@ -48,7 +48,7 @@ public class MenuRestController {
         menuRepository.deleteExisted(id);
     }
 
-    @GetMapping("/api/profile/restaurants/{restaurant_id}/menu")
+    @GetMapping("/api/restaurants/{restaurant_id}/menu")
     @CacheEvict(allEntries = true)
     public Menu getForRestaurant(@PathVariable int restaurant_id) {
         return menuRepository.getByRestaurantId(restaurant_id);

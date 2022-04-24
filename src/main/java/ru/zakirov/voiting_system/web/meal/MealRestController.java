@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.zakirov.voiting_system.model.Meal;
+import ru.zakirov.voiting_system.model.Menu;
 import ru.zakirov.voiting_system.repository.MealRepository;
+import ru.zakirov.voiting_system.repository.MenuRepository;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -24,11 +26,14 @@ import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkNew;
 public class MealRestController {
     static final String REST_URL = "/api/admin/meals";
 
-    protected final MealRepository repository;
+    private final MealRepository repository;
+
+    private final MenuRepository menuRepository;
 
 
-    public MealRestController(MealRepository repository) {
+    public MealRestController(MealRepository repository, MenuRepository menuRepository) {
         this.repository = repository;
+        this.menuRepository = menuRepository;
     }
 
     @GetMapping("/{id}")
@@ -65,8 +70,15 @@ public class MealRestController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
-        repository.deleteExisted(id);
+        List<Menu> menus = menuRepository.findAll();
+        Meal meal = repository.getById(id);
+        for (Menu m : menus) {
+            m.getMeals().remove(meal);
+            menuRepository.saveAndFlush(m);
+        }
+        repository.delete(meal);
     }
 }

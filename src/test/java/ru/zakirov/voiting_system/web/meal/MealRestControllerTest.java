@@ -25,11 +25,6 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Autowired
     private MealRepository mealRepository;
 
-    @Test
-    void getUnAuth() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL))
-                .andExpect(status().isUnauthorized());
-    }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)

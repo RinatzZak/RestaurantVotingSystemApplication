@@ -18,8 +18,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-import static ru.zakirov.voiting_system.util.validation.ValidationUtil.assureIdConsistent;
-import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkNew;
+import static ru.zakirov.voiting_system.util.validation.ValidationUtil.*;
 
 @RestController
 @Slf4j
@@ -64,7 +63,8 @@ public class MenuRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Menu> createWithLocation(@Valid @RequestBody Menu menu, @PathVariable int restaurant_id) {
         log.info("create{} for restaurant{}", menu, restaurant_id);
-        checkNew(menu.getRestaurant()); // НАДО ПЕРЕДЕЛАТЬ! ошибка при создании нового меню.`
+        checkNewMenu(menuRepository.getByRestaurantId(restaurant_id));
+        // НАДО ПЕРЕДЕЛАТЬ! ошибка при создании нового меню.`
         menu.setRestaurant(restaurantRepository.getById(restaurant_id));
         menu.setMeals(menu.getMeals());
         Menu created = menuRepository.save(menu);
@@ -84,7 +84,7 @@ public class MenuRestController {
         menuRepository.save(menu);
     }
 
-    @PutMapping("/api/admin/restaurants/{restaurant_id}/menu/meals/{meals_id}")
+    @PostMapping(value = "/api/admin/restaurants/{restaurant_id}/menu/meals/{meals_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void addingMealToMenu(@PathVariable int restaurant_id, @PathVariable int meals_id) {
         log.info("add meal{} to menu from restaurant{}", meals_id, restaurant_id);
@@ -93,7 +93,7 @@ public class MenuRestController {
         menuRepository.save(menu);
     }
 
-    @PostMapping("/api/admin/restaurants/{restaurant_id}/menu/meals/{meals_id}")
+    @DeleteMapping("/api/admin/restaurants/{restaurant_id}/menu/meals/{meals_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public void removingMealFromMenu(@PathVariable int restaurant_id, @PathVariable int meals_id) {

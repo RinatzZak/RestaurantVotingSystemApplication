@@ -18,7 +18,8 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-import static ru.zakirov.voiting_system.util.validation.ValidationUtil.*;
+import static ru.zakirov.voiting_system.util.validation.ValidationUtil.assureIdConsistent;
+import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkNewMenu;
 
 @RestController
 @Slf4j

@@ -10,7 +10,8 @@ VALUES ('USER', 1),
 INSERT INTO RESTAURANT (address, description)
 VALUES ('193 Synods Street Eden Terrace', 'Kazuya'),
        ('Commercial Bay Level 2/7 Queen Street', 'Ahi'),
-       ('Level 1/12 Wyndham Street', 'Culprit');
+       ('Level 1/12 Wyndham Street', 'Culprit'),
+       ('95-97 Customs Street West Market Square', 'Hello Beasty');
 
 INSERT INTO MEALS (description, price)
 VALUES ('Rice with seafood', 400.00),

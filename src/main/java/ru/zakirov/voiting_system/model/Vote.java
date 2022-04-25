@@ -13,6 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "vote")
@@ -24,7 +25,7 @@ public class Vote extends BaseEntity {
     @Column(name = "time_added", columnDefinition = "timestamp default now()")
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalTime timeAdded;
+    private LocalTime timeAdded = LocalTime.now().truncatedTo(ChronoUnit.MINUTES);
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")

@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +23,7 @@ public class Menu extends BaseEntity {
     @Column(name = "date_added", nullable = false, columnDefinition = "timestamp default now()")
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Date dateAdded = new Date();
+    private LocalDate dateAdded = LocalDate.now();
 
     @OneToOne
     @JoinColumn
@@ -39,7 +40,7 @@ public class Menu extends BaseEntity {
             )
     private List<Meal> meals = new ArrayList<>();
 
-    public Menu(Integer id, Date dateAdded) {
+    public Menu(Integer id, LocalDate dateAdded) {
         super(id);
         this.dateAdded = dateAdded;
     }
@@ -47,7 +48,7 @@ public class Menu extends BaseEntity {
     public Menu() {
     }
 
-    public Menu(Integer id, Date dateAdded, Restaurant restaurant, List<Meal> meals) {
+    public Menu(Integer id, LocalDate dateAdded, Restaurant restaurant, List<Meal> meals) {
         super(id);
         this.dateAdded = dateAdded;
         this.restaurant = restaurant;

@@ -48,8 +48,11 @@ public class RestaurantRestController {
     @Transactional
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
-        menuRepository.delete(menuRepository.getByRestaurantId(id));
-        menuRepository.flush();
+        Menu menu = menuRepository.getByRestaurantId(id);
+        if (menu != null) {
+            menuRepository.delete(menuRepository.getByRestaurantId(id));
+            menuRepository.flush();
+        }
         repository.deleteExisted(id);
     }
 

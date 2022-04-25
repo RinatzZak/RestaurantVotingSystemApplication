@@ -38,11 +38,13 @@ public class MealRestController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Meal> get(@PathVariable int id) {
+        log.info("get{}", id);
         return ResponseEntity.of(Objects.requireNonNull(repository.findById(id)));
     }
 
     @GetMapping
     public List<Meal> getAll() {
+        log.info("getAll");
         return repository.findAll();
     }
 

@@ -49,4 +49,10 @@ public class ValidationUtil {
             throw new IllegalRequestDataException("You have already voted");
         }
     }
+
+    public static void checkNewMenu(Object e) {
+        if (e != null) {
+            throw new IllegalRequestDataException("Restaurant have already menu");
+        }
+    }
 }

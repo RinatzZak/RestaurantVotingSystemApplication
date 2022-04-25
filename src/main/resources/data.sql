@@ -24,6 +24,8 @@ VALUES ('Rice with seafood', 400.00),
        ('Cherry ice cream', 55.00),
        ('Apple ice cream', 51.00);
 
+INSERT INTO VOTE (RESTAURANT_ID, USER_ID)
+VALUES (1, 1);
 
 INSERT INTO MENU (RESTAURANT_ID)
 VALUES (1),

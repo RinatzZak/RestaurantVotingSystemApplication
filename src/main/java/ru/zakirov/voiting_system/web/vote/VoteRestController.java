@@ -33,21 +33,21 @@ public class VoteRestController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/api/profile/votes")
+    @GetMapping("/api/votes")
     @Cacheable
     public List<Vote> getAll() {
         log.info("getAll");
         return voteRepository.findAll();
     }
 
-    @DeleteMapping("/api/profile/{user_id}/votes")
+    @DeleteMapping("/api/{user_id}/votes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int user_id) {
         checkTime(voteRepository.findByUserId(user_id).getTimeAdded());
         voteRepository.delete(voteRepository.findByUserId(user_id));
     }
 
-    @PostMapping("/api/profile/{user_id}/votes/{restaurant_id}")
+    @PostMapping("/api/{user_id}/votes/{restaurant_id}")
     @ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(allEntries = true)
     public void create(@PathVariable int user_id, @PathVariable int restaurant_id) {
@@ -59,7 +59,7 @@ public class VoteRestController {
         voteRepository.save(vote);
     }
 
-    @PutMapping("/api/profile/{user_id}/votes/{restaurant_id}")
+    @PutMapping("/api/{user_id}/votes/{restaurant_id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     @CacheEvict(allEntries = true)

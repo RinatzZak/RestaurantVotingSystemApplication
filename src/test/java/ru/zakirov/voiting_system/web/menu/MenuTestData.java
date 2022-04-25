@@ -21,7 +21,7 @@ public class MenuTestData {
     public static Menu menu3 = new Menu(MENU1_ID + 2, LocalDate.now(), restaurant2, List.of(meal1, meal3, meal6));
 
     public static List<Menu> menuList = List.of(menu1, menu2, menu3);
-
+    public static List<Menu> menuList2 = List.of(menu2, menu3);
 
     public static final List<Meal> meals1 = List.of(meal1, meal2, meal5);
     public static final List<Meal> meals2 = List.of(meal6, meal8, meal9);

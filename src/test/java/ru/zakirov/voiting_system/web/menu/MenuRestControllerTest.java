@@ -15,7 +15,7 @@ import ru.zakirov.voiting_system.web.AbstractControllerTest;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,7 +37,7 @@ class MenuRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete("/api/admin/restaurants/1/menu/" + MENU1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertFalse(menuRepository.findById(MENU1_ID).isPresent());
+        assertEquals(menuRepository.findAll(), menuList2);
     }
 
     @Test

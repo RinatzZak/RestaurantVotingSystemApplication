@@ -9,7 +9,7 @@ public class RestaurantTestData {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class);
 
     public static final int RESTAURANT1_ID = 1;
-    public static final int NOT_FOUND = 100;
+    public static final int NOT_FOUND_ID = 100;
 
     public static final Restaurant restaurant1 = new Restaurant(RESTAURANT1_ID, "Kazuya", "193 Synods Street Eden Terrace");
     public static final Restaurant restaurant2 = new Restaurant(RESTAURANT1_ID + 1, "Ahi", "Commercial Bay Level 2/7 Queen Street");

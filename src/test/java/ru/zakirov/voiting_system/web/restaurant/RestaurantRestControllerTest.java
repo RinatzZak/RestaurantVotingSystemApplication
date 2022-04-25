@@ -11,8 +11,6 @@ import ru.zakirov.voiting_system.repository.RestaurantRepository;
 import ru.zakirov.voiting_system.util.JsonUtil;
 import ru.zakirov.voiting_system.web.AbstractControllerTest;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,12 +22,6 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
 
     @Autowired
     private RestaurantRepository repository;
-
-    @Test
-    void getUnAuth() throws Exception {
-        perform(MockMvcRequestBuilders.get("/api/admin/restaurants/"))
-                .andExpect(status().isUnauthorized());
-    }
 
     @Test
     @WithUserDetails(value = USER_MAIL)
@@ -46,7 +38,7 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete("/api/admin/restaurants/" + RESTAURANT1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertFalse(repository.findById(RESTAURANT1_ID).isPresent());
+        RESTAURANT_MATCHER.assertMatch(repository.findAll(), restaurant2, restaurant3, restaurant4);
     }
 
     @Test
@@ -87,9 +79,9 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = ADMIN_MAIL)
+    @WithUserDetails(value = USER_MAIL)
     void getNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get("/api/admin/restaurants/" + NOT_FOUND))
+        perform(MockMvcRequestBuilders.get("/api/restaurants/" + NOT_FOUND_ID))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -97,7 +89,8 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void deleteNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.delete("/api/admin/restaurants/" + NOT_FOUND))
+        perform(MockMvcRequestBuilders.delete("/api/admin/restaurants/" + NOT_FOUND_ID))
+                .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
 

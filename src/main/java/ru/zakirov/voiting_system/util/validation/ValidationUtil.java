@@ -44,7 +44,7 @@ public class ValidationUtil {
         }
     }
 
-    public static void checkEmpty(Object e) {
+    public static void checkEmptyVote(Object e) {
         if (e != null) {
             throw new IllegalRequestDataException("You have already voted");
         }

@@ -13,9 +13,11 @@ import ru.zakirov.voiting_system.repository.UserRepository;
 import ru.zakirov.voiting_system.repository.VoteRepository;
 
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static ru.zakirov.voiting_system.util.validation.ValidationUtil.*;
+import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkEmpty;
+import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkTime;
 
 @RestController
 @Slf4j
@@ -50,13 +52,14 @@ public class VoteRestController {
     @PostMapping("/api/{user_id}/votes/{restaurant_id}")
     @ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(allEntries = true)
-    public void create(@PathVariable int user_id, @PathVariable int restaurant_id) {
+    public Vote create(@PathVariable int user_id, @PathVariable int restaurant_id) {
         Vote vote = voteRepository.findByUserId(user_id);
         checkEmpty(vote);
         log.info("add voice by user{} for restaurant{}", user_id, restaurant_id);
-        vote = new Vote(LocalTime.now(), restaurantRepository.getById(restaurant_id),
+        vote = new Vote(LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
+                restaurantRepository.findById(restaurant_id).get(),
                 userRepository.getById(user_id));
-        voteRepository.save(vote);
+        return voteRepository.save(vote);
     }
 
     @PutMapping("/api/{user_id}/votes/{restaurant_id}")

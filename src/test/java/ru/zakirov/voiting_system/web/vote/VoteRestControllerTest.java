@@ -6,19 +6,20 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.zakirov.voiting_system.model.Vote;
 import ru.zakirov.voiting_system.repository.VoteRepository;
+import ru.zakirov.voiting_system.util.JsonUtil;
 import ru.zakirov.voiting_system.web.AbstractControllerTest;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.zakirov.voiting_system.web.meal.MealTestData.*;
-import static ru.zakirov.voiting_system.web.meal.MealTestData.MEAL1_ID;
+import static ru.zakirov.voiting_system.web.user.UserTestData.ADMIN_MAIL;
 import static ru.zakirov.voiting_system.web.user.UserTestData.USER_MAIL;
 import static ru.zakirov.voiting_system.web.vote.VoteTestData.*;
 
@@ -38,20 +39,72 @@ class VoteRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
-    void delete() throws Exception {
-        MockedStatic<LocalTime> mocked = Mockito.mockStatic(LocalTime.class);
-        mocked.when(LocalTime::now).thenReturn(LocalTime.of(10, 3 ));
-        perform(MockMvcRequestBuilders.delete("/api/1/votes"))
-                .andDo(print())
-                .andExpect(status().isNoContent());
-        assertFalse(voteRepository.findById(VOTE1_ID).isPresent());
+    void delete() {
+        try {
+            MockedStatic<LocalTime> mocked = Mockito.mockStatic(LocalTime.class);
+            mocked.when(LocalTime::now).thenReturn(LocalTime.of(10, 59));
+            perform(MockMvcRequestBuilders.delete("/api/1/votes"))
+                    .andDo(print())
+                    .andExpect(status().isNoContent());
+            assertFalse(voteRepository.findById(VOTE1_ID).isPresent());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    void create() {
+    @WithUserDetails(value = USER_MAIL)
+    void deleteAfterElevenClock() {
+        try {
+            MockedStatic<LocalTime> mocked = Mockito.mockStatic(LocalTime.class);
+            mocked.when(LocalTime::now).thenReturn(LocalTime.of(12, 0));
+            perform(MockMvcRequestBuilders.delete("/api/1/votes"))
+                    .andDo(print())
+                    .andExpect(status().isUnprocessableEntity());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    void update() {
+    @WithUserDetails(value = ADMIN_MAIL)
+    void create() throws Exception {
+        Vote newVote = VoteTestData.getNew();
+        ResultActions action = perform(MockMvcRequestBuilders.post("/api/2/votes/2/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newVote)))
+                .andExpect(status().isCreated());
+
+        Vote created = VOTE_MATCHER.readFromJson(action);
+        int newId = created.id();
+        newVote.setId(newId);
+        VOTE_MATCHER.assertMatch(created, newVote);
+        VOTE_MATCHER.assertMatch(voteRepository.getById(newId), newVote);
+    }
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void createSecondVote() throws Exception {
+        Vote newVote = VoteTestData.getNew();
+        perform(MockMvcRequestBuilders.post("/api/1/votes/3/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(newVote)))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void updateAfterElevenClock() {
+        try {
+            MockedStatic<LocalTime> mocked = Mockito.mockStatic(LocalTime.class);
+            mocked.when(LocalTime::now).thenReturn(LocalTime.of(11, 1));
+            Vote updated = VoteTestData.getUpdated();
+            perform(MockMvcRequestBuilders.put("/api/1/votes/3/")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(JsonUtil.writeValue(updated)))
+                    .andExpect(status().isUnprocessableEntity());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

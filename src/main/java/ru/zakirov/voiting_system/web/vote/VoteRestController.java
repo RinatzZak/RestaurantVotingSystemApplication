@@ -16,7 +16,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkEmpty;
+import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkEmptyVote;
 import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkTime;
 
 @RestController
@@ -45,8 +45,9 @@ public class VoteRestController {
     @DeleteMapping("/api/{user_id}/votes")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int user_id) {
+        log.info("user{} delete his vote", user_id);
         checkTime(voteRepository.findByUserId(user_id).getTimeAdded());
-        voteRepository.delete(voteRepository.findByUserId(user_id));
+        voteRepository.deleteExisted(voteRepository.findByUserId(user_id).id());
     }
 
     @PostMapping("/api/{user_id}/votes/{restaurant_id}")
@@ -54,10 +55,9 @@ public class VoteRestController {
     @CacheEvict(allEntries = true)
     public Vote create(@PathVariable int user_id, @PathVariable int restaurant_id) {
         Vote vote = voteRepository.findByUserId(user_id);
-        checkEmpty(vote);
+        checkEmptyVote(vote);
         log.info("add voice by user{} for restaurant{}", user_id, restaurant_id);
-        vote = new Vote(LocalTime.now().truncatedTo(ChronoUnit.MINUTES),
-                restaurantRepository.findById(restaurant_id).get(),
+        vote = new Vote(LocalTime.now().truncatedTo(ChronoUnit.MINUTES), restaurantRepository.findById(restaurant_id).get(),
                 userRepository.getById(user_id));
         return voteRepository.save(vote);
     }

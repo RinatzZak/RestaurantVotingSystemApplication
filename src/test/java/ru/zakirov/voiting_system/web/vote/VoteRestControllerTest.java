@@ -94,6 +94,22 @@ class VoteRestControllerTest extends AbstractControllerTest {
 
     @Test
     @WithUserDetails(value = USER_MAIL)
+    void update() {
+        try {
+            MockedStatic<LocalTime> mocked = Mockito.mockStatic(LocalTime.class);
+            mocked.when(LocalTime::now).thenReturn(LocalTime.of(6, 11));
+            Vote updated = VoteTestData.getUpdated();
+            perform(MockMvcRequestBuilders.put("/api/1/votes/3/")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(JsonUtil.writeValue(updated)))
+                    .andExpect(status().isUnprocessableEntity());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
     void updateAfterElevenClock() {
         try {
             MockedStatic<LocalTime> mocked = Mockito.mockStatic(LocalTime.class);

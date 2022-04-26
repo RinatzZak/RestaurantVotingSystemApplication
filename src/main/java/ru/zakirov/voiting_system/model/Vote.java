@@ -30,7 +30,6 @@ public class Vote extends BaseEntity {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnoreProperties(value = {"address", "menu"})
     private Restaurant restaurant;
 
     @OneToOne(fetch = FetchType.LAZY)

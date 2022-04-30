@@ -47,8 +47,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
                     .andDo(print())
                     .andExpect(status().isNoContent());
             assertFalse(voteRepository.findById(VOTE1_ID).isPresent());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 
@@ -61,8 +60,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
             perform(MockMvcRequestBuilders.delete("/api/1/votes"))
                     .andDo(print())
                     .andExpect(status().isUnprocessableEntity());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 
@@ -103,8 +101,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(JsonUtil.writeValue(updated)))
                     .andExpect(status().isUnprocessableEntity());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 
@@ -119,8 +116,7 @@ class VoteRestControllerTest extends AbstractControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(JsonUtil.writeValue(updated)))
                     .andExpect(status().isUnprocessableEntity());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 }

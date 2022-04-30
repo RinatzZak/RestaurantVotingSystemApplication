@@ -33,7 +33,7 @@ spring:
 logging:
   level:
     root: WARN
-    ru.zakirov.voiting_system: debug
+    ru.zakirov.voting_system: debug
     org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: DEBUG
 
 server.servlet:

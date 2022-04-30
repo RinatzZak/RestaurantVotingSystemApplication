@@ -16,7 +16,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkEmptyVote;
+import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkEmpty;
 import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkTime;
 
 @RestController
@@ -55,7 +55,7 @@ public class VoteRestController {
     @CacheEvict(allEntries = true)
     public Vote create(@PathVariable int user_id, @PathVariable int restaurant_id) {
         Vote vote = voteRepository.findByUserId(user_id);
-        checkEmptyVote(vote);
+        checkEmpty(vote);
         log.info("add voice by user{} for restaurant{}", user_id, restaurant_id);
         vote = new Vote(LocalTime.now().truncatedTo(ChronoUnit.MINUTES), restaurantRepository.findById(restaurant_id).get(),
                 userRepository.getById(user_id));

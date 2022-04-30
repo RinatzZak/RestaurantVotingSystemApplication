@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.zakirov.voiting_system.model.Menu;
@@ -32,9 +33,17 @@ public class RestaurantRestController {
 
     private final MenuRepository menuRepository;
 
-    public RestaurantRestController(RestaurantRepository repository, MenuRepository menuRepository) {
+    private final UniqueDescriptionValidator validator;
+
+    public RestaurantRestController(RestaurantRepository repository, MenuRepository menuRepository, UniqueDescriptionValidator validator) {
         this.repository = repository;
         this.menuRepository = menuRepository;
+        this.validator = validator;
+    }
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(validator);
     }
 
     @GetMapping("/api/restaurants/{id}")

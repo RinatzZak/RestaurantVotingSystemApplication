@@ -44,15 +44,9 @@ public class ValidationUtil {
         }
     }
 
-    public static void checkEmptyVote(Object e) {
+    public static void checkEmpty(Object e) {
         if (e != null) {
-            throw new IllegalRequestDataException("You have already voted");
-        }
-    }
-
-    public static void checkNewMenu(Object e) {
-        if (e != null) {
-            throw new IllegalRequestDataException("Restaurant have already menu");
+            throw new IllegalRequestDataException("It is already exist!");
         }
     }
 }

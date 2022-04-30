@@ -19,7 +19,7 @@ import java.net.URI;
 import java.util.List;
 
 import static ru.zakirov.voiting_system.util.validation.ValidationUtil.assureIdConsistent;
-import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkNewMenu;
+import static ru.zakirov.voiting_system.util.validation.ValidationUtil.checkEmpty;
 
 @RestController
 @Slf4j
@@ -41,6 +41,7 @@ public class MenuRestController {
 
     @DeleteMapping("/api/admin/restaurants/{restaurant_id}/menu/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
     public void delete(@PathVariable int restaurant_id, @PathVariable int id) {
         log.info("delete menu for restaurant{}", restaurant_id);
         Menu menu = menuRepository.getById(id);
@@ -64,8 +65,7 @@ public class MenuRestController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Menu> createWithLocation(@Valid @RequestBody Menu menu, @PathVariable int restaurant_id) {
         log.info("create{} for restaurant{}", menu, restaurant_id);
-        checkNewMenu(menuRepository.getByRestaurantId(restaurant_id));
-        // НАДО ПЕРЕДЕЛАТЬ! ошибка при создании нового меню.`
+        checkEmpty(menuRepository.getByRestaurantId(restaurant_id));
         menu.setRestaurant(restaurantRepository.getById(restaurant_id));
         menu.setMeals(menu.getMeals());
         Menu created = menuRepository.save(menu);

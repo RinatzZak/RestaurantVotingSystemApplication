@@ -5,7 +5,6 @@
 ### Task:
 Design and implement a REST API using Hibernate/Spring/SpringMVC (or Spring-Boot) without frontend.
 
-The task is:
 
 Build a voting system for deciding where to have lunch.
 
@@ -20,7 +19,7 @@ If it is after 11:00 then it is too late, vote can't be changed
 Each restaurant provides a new menu each day.
 
 ### Stack: 
-[JDK 17](http://jdk.java.net/17/), Spring Boot 2.5, Lombok, H2, Swagger/OpenAPI 3.0
+[JDK 17](http://jdk.java.net/17/), Spring Boot 2.5, Lombok, JUnit 5, Mockito, DATA Jpa, H2, Swagger/OpenAPI 3.0
 
 ---
 

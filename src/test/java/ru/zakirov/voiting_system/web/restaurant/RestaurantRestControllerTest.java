@@ -6,11 +6,15 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.zakirov.voiting_system.model.Restaurant;
 import ru.zakirov.voiting_system.repository.RestaurantRepository;
 import ru.zakirov.voiting_system.util.JsonUtil;
 import ru.zakirov.voiting_system.web.AbstractControllerTest;
+import ru.zakirov.voiting_system.web.GlobalExceptionHandler;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -115,5 +119,32 @@ class RestaurantRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    @WithUserDetails(value = ADMIN_MAIL)
+    void createDuplicate() throws Exception {
+        Restaurant expected = new Restaurant(null, restaurant3.getDescription(), "newAddress12345");
+        perform(MockMvcRequestBuilders.post("/api/admin/restaurants/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(expected)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().string(containsString(GlobalExceptionHandler.EXCEPTION_DUPLICATE_DESCRIPTION_OF_RESTAURANT)));
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    @WithUserDetails(value = ADMIN_MAIL)
+    void updateDuplicate() throws Exception {
+        Restaurant updated = new Restaurant(restaurant1);
+        updated.setDescription(restaurant3.getDescription());
+        perform(MockMvcRequestBuilders.put("/api/admin/restaurants/" + RESTAURANT1_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updated)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().string(containsString(GlobalExceptionHandler.EXCEPTION_DUPLICATE_DESCRIPTION_OF_RESTAURANT)));
     }
 }

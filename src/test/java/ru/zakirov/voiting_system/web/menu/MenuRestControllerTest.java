@@ -98,8 +98,7 @@ class MenuRestControllerTest extends AbstractControllerTest {
                     .andExpect(status().isNoContent());
 
             MENU_MATCHER.assertMatch(menuRepository.getById(MENU1_ID), updated);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
     }
 

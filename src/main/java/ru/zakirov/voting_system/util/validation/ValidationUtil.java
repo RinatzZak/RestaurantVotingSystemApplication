@@ -11,6 +11,8 @@ import java.time.LocalTime;
 @UtilityClass
 public class ValidationUtil {
 
+    public static final LocalTime FRONTIER = LocalTime.of(11, 0);
+
     public static void checkNew(HasId bean) {
         if (!bean.isNew()) {
             throw new IllegalRequestDataException(bean.getClass().getSimpleName() + " must be new (id=null)");
@@ -37,11 +39,9 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-    public static void checkTime(LocalTime time) {
-        LocalTime frontier = LocalTime.parse("11:00");
-        if (time.isAfter(frontier)) {
-            throw new IllegalRequestDataException("You can't change your vote  after 11!");
-        }
+    public static boolean checkTime() {
+        // throw new IllegalRequestDataException("You can't change your vote  after 11!");
+        return !LocalTime.now().isBefore(FRONTIER);
     }
 
     public static void checkEmpty(Object e) {

@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @ToString
 public class Vote extends BaseEntity {
 
-    @Column(name = "date_added", unique = true)
+    @Column(name = "date_added")
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDate date;

@@ -21,20 +21,20 @@ import java.time.LocalDate;
 @ToString
 public class Vote extends BaseEntity {
 
-    @Column(name = "date_added")
+    @Column(name = "date_added", nullable = false)
     @NotNull
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDate date;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "restaurant_id")
+    @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
     private Restaurant restaurant;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
+    @ToString.Exclude
     private User user;
 
     public Vote(Integer id, LocalDate date, Restaurant restaurant, User user) {
@@ -45,8 +45,7 @@ public class Vote extends BaseEntity {
     }
 
     public Vote(LocalDate date, Restaurant restaurant, User user) {
-        this.date = date;
-        this.restaurant = restaurant;
-        this.user = user;
+        this(null, date, restaurant, user);
+
     }
 }

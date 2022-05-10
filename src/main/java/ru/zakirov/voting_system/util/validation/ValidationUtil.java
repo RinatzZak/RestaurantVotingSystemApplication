@@ -39,9 +39,10 @@ public class ValidationUtil {
         return rootCause != null ? rootCause : t;
     }
 
-    public static boolean checkTime() {
-        // throw new IllegalRequestDataException("You can't change your vote  after 11!");
-        return !LocalTime.now().isBefore(FRONTIER);
+    public static void checkTime() {
+        if (LocalTime.now().isAfter(FRONTIER)) {
+            throw new IllegalRequestDataException("You can't change your vote after 11!");
+        }
     }
 
     public static void checkEmpty(Object e) {

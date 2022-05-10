@@ -24,7 +24,7 @@ VALUES ('Rice with seafood', 400.00),
        ('Cherry ice cream', 55.00),
        ('Apple ice cream', 51.00);
 
-INSERT INTO VOTE (DATE_ADDED ,RESTAURANT_ID, USER_ID)
+INSERT INTO VOTE (DATE_ADDED, RESTAURANT_ID, USER_ID)
 VALUES ('2020-10-10' ,1, 1),
        ('2021-11-11' ,2, 1),
        ('2022-01-01' ,3, 1);

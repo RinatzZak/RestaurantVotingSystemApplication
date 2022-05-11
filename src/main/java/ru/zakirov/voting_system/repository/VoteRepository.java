@@ -13,8 +13,8 @@ import java.util.Optional;
 public interface VoteRepository extends BaseRepository<Vote> {
 
     @Query("select v from Vote v where v.user.id = ?1")
-    List<Vote> findAllById(int userId);
+    List<Vote> getAllById(int userId);
 
     @Query("select v from Vote v where v.user.id = ?1 and v.date = ?2")
-    Optional<Vote> findVoteByIdAndDate(int userId, @NotNull LocalDate date);
+    Optional<Vote> findByIdAndDate(int userId, @NotNull LocalDate date);
 }

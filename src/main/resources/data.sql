@@ -27,7 +27,8 @@ VALUES ('Rice with seafood', 400.00),
 INSERT INTO VOTE (DATE_ADDED, RESTAURANT_ID, USER_ID)
 VALUES ('2020-10-10' ,1, 1),
        ('2021-11-11' ,2, 1),
-       ('2022-01-01' ,3, 1);
+       ('2022-01-01' ,3, 1),
+(current_date , 1, 1);
 
 INSERT INTO MENU (RESTAURANT_ID)
 VALUES (1),

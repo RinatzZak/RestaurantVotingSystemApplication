@@ -23,13 +23,14 @@ public class VoteTestData {
 
     public static Vote vote4 = new Vote(VOTE1_ID + 3, LocalDate.now(), restaurant1, user);
 
-    public static List<Vote> myVotes = List.of(vote1, vote2, vote3);
+
+    public static List<Vote> myVotes = List.of(vote1, vote2, vote3, vote4);
 
     public static Vote getNew() {
-        return new Vote(null, LocalDate.now(), restaurant2, user);
+        return new Vote(null, LocalDate.now(), restaurant2, admin);
     }
 
     public static Vote getUpdated() {
-        return new Vote(VOTE1_ID, LocalDate.now(), restaurant3, user);
+        return new Vote(VOTE1_ID + 3, LocalDate.now(), restaurant2, user);
     }
 }

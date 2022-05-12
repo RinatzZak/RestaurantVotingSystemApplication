@@ -1,4 +1,4 @@
-package ru.zakirov.voting_system.web.meal;
+package ru.zakirov.voting_system.web.dish;
 
 import lombok.AllArgsConstructor;
 import org.springframework.lang.NonNull;

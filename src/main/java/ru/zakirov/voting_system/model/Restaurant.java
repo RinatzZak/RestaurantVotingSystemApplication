@@ -1,7 +1,9 @@
 package ru.zakirov.voting_system.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,40 +15,24 @@ import javax.validation.constraints.Size;
 @Table(name = "restaurant")
 @Getter
 @Setter
-public class Restaurant extends BaseEntity {
-
-    @Column(name = "description", unique = true)
-    @NotBlank
-    @Size(min = 2, max = 50)
-    private String description;
-
+@NoArgsConstructor
+@ToString
+public class Restaurant extends NamedEntity {
     @Column(name = "address")
     @NotBlank
     @Size(min = 5, max = 100)
     private String address;
 
-    public Restaurant() {
-    }
-
     public Restaurant(Restaurant r) {
-        this(r.id, r.description, r.address);
+        this(r.id, r.name, r.address);
     }
 
-    public Restaurant(String description, String address) {
-        this(null, description, address);
+    public Restaurant(String name, String address) {
+        this(null, name, address);
     }
 
-    public Restaurant(Integer id, String description, String address) {
-        super(id);
-        this.description = description;
+    public Restaurant(Integer id, String name, String address) {
+        super(id, name);
         this.address = address;
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
-                "description = " + description + ", " +
-                "address = " + address + ")";
     }
 }

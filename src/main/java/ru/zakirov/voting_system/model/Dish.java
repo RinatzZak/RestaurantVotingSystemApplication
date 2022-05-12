@@ -38,8 +38,8 @@ public class Dish extends NamedEntity {
         super(id, name);
         this.price = price;
     }
-    public Dish(String name, BigDecimal price, Restaurant restaurant) {
-        this(null, name, price, restaurant);
+    public Dish(Dish d) {
+        this(d.id, d.name, d.price, d.restaurant);
     }
 
 }

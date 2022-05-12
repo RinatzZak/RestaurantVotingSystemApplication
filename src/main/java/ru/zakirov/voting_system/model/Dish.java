@@ -1,14 +1,15 @@
 package ru.zakirov.voting_system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
@@ -25,15 +26,20 @@ public class Dish extends NamedEntity {
     @Range(min = 0, max = 300000)
     private BigDecimal price;
 
-    public Dish(Integer id, String name, BigDecimal price) {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ToString.Exclude
+    @JsonIgnore
+    private Restaurant restaurant;
+
+    public Dish(Integer id, String name, BigDecimal price, Restaurant restaurant) {
         super(id, name);
         this.price = price;
     }
-    public Dish(String name, BigDecimal price) {
-        this(null, name, price);
+    public Dish(String name, BigDecimal price, Restaurant restaurant) {
+        this(null, name, price, restaurant);
     }
 
-    public Dish(Dish m) {
-        this(m.id, m.name, m.price);
-    }
 }

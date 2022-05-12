@@ -27,7 +27,7 @@ public class UniqueDescriptionValidatorDish implements Validator {
     public void validate(@NonNull Object target, @NonNull Errors errors) {
         Dish dish = (Dish) target;
         if (StringUtils.hasText(dish.getName())) {
-            dishRepository.getByDescriptionIgnoreCase(dish.getName())
+            dishRepository.getByNameIgnoreCase(dish.getName())
                     .ifPresent(dbMeal -> {
                         if (request.getMethod().equals("PUT")) {
                             int dbId = dbMeal.id();

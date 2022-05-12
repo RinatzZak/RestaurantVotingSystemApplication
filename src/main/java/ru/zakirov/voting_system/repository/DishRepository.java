@@ -7,5 +7,5 @@ import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface DishRepository extends BaseRepository<Dish> {
-    Optional<Dish> getByDescriptionIgnoreCase(String description);
+    Optional<Dish> getByNameIgnoreCase(String description);
 }

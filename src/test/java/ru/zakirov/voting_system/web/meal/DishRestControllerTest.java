@@ -8,8 +8,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.zakirov.voting_system.model.Meal;
-import ru.zakirov.voting_system.repository.MealRepository;
+import ru.zakirov.voting_system.model.Dish;
+import ru.zakirov.voting_system.repository.DishRepository;
 import ru.zakirov.voting_system.util.JsonUtil;
 import ru.zakirov.voting_system.web.AbstractControllerTest;
 import ru.zakirov.voting_system.web.GlobalExceptionHandler;
@@ -21,22 +21,22 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.zakirov.voting_system.web.meal.MealTestData.*;
+import static ru.zakirov.voting_system.web.meal.DishTestData.*;
 import static ru.zakirov.voting_system.web.user.UserTestData.ADMIN_MAIL;
 
-class MealRestControllerTest extends AbstractControllerTest {
+class DishRestControllerTest extends AbstractControllerTest {
     private static final String REST_URL = MealRestController.REST_URL + '/';
     @Autowired
-    private MealRepository mealRepository;
+    private DishRepository dishRepository;
 
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get(REST_URL + MEAL1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + DISH1_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_MATCHER.contentJson(meal1));
+                .andExpect(DISH_MATCHER.contentJson(DISH_1));
     }
 
     @Test
@@ -45,44 +45,44 @@ class MealRestControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(MEAL_MATCHER.contentJson(meals));
+                .andExpect(DISH_MATCHER.contentJson(DISHES));
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
-        Meal newMeal = MealTestData.getNew();
+        Dish newDish = DishTestData.getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(newMeal)))
+                .content(JsonUtil.writeValue(newDish)))
                 .andExpect(status().isCreated());
 
-        Meal created = MEAL_MATCHER.readFromJson(action);
+        Dish created = DISH_MATCHER.readFromJson(action);
         int newId = created.id();
-        newMeal.setId(newId);
-        MEAL_MATCHER.assertMatch(created, newMeal);
-        MEAL_MATCHER.assertMatch(mealRepository.getById(newId), newMeal);
+        newDish.setId(newId);
+        DISH_MATCHER.assertMatch(created, newDish);
+        DISH_MATCHER.assertMatch(dishRepository.getById(newId), newDish);
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
-        Meal updated = MealTestData.getUpdated();
-        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
+        Dish updated = DishTestData.getUpdated();
+        perform(MockMvcRequestBuilders.put(REST_URL + DISH1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        MEAL_MATCHER.assertMatch(mealRepository.getById(MEAL1_ID), updated);
+        DISH_MATCHER.assertMatch(dishRepository.getById(DISH1_ID), updated);
     }
 
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete(REST_URL + MEAL1_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + DISH1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertFalse(mealRepository.findById(MEAL1_ID).isPresent());
+        assertFalse(dishRepository.findById(DISH1_ID).isPresent());
     }
 
     @Test
@@ -103,7 +103,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        Meal invalid = new Meal(null, "K", new BigDecimal("7777777.00"));
+        Dish invalid = new Dish(null, "K", new BigDecimal("7777777.00"));
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
@@ -114,9 +114,9 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalid() throws Exception {
-        Meal invalid = new Meal(meal1);
-        invalid.setDescription("");
-        perform(MockMvcRequestBuilders.put(REST_URL + MEAL1_ID)
+        Dish invalid = new Dish(DISH_1);
+        invalid.setName("");
+        perform(MockMvcRequestBuilders.put(REST_URL + DISH1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
@@ -127,7 +127,7 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicate() throws Exception {
-        Meal expected = new Meal(null, meal5.getDescription(), new BigDecimal("100"));
+        Dish expected = new Dish(null, DISH_5.getName(), new BigDecimal("100"));
         perform(MockMvcRequestBuilders.post("/api/admin/meals/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
@@ -140,9 +140,9 @@ class MealRestControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicate() throws Exception {
-        Meal updated = new Meal(meal1);
-        updated.setDescription(meal8.getDescription());
-        perform(MockMvcRequestBuilders.put("/api/admin/meals/" + MEAL1_ID)
+        Dish updated = new Dish(DISH_1);
+        updated.setName(DISH_8.getName());
+        perform(MockMvcRequestBuilders.put("/api/admin/meals/" + DISH1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())

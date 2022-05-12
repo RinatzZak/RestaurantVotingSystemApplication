@@ -13,7 +13,7 @@ VALUES ('193 Synods Street Eden Terrace', 'Kazuya'),
        ('Level 1/12 Wyndham Street', 'Culprit'),
        ('95-97 Customs Street West Market Square', 'Hello Beasty');
 
-INSERT INTO MEALS (description, price)
+INSERT INTO DISH (name , price)
 VALUES ('Rice with seafood', 400.00),
        ('Soup puree', 300.00),
        ('Royal roast beef', 600.00),
@@ -35,7 +35,7 @@ VALUES (1),
        (3),
        (2);
 
-INSERT INTO MENU_MEAL(menu_id, meals_id)
+INSERT INTO MENU_DISH(menu_id, dish_id)
 VALUES (1, 1),
        (1, 2),
        (1, 5),

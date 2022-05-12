@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Component
 @AllArgsConstructor
-public class UniqueDescriptionValidatorDish implements Validator {
+public class UniqueNameOfDishValidator implements Validator {
     private DishRepository dishRepository;
     private HttpServletRequest request;
 
@@ -38,7 +38,7 @@ public class UniqueDescriptionValidatorDish implements Validator {
                             if (requestURI.endsWith("/" + dbId))
                                 return;
                         }
-                        errors.rejectValue("description", "", GlobalExceptionHandler.EXCEPTION_DUPLICATE_DESCRIPTION_OF_MEAL);
+                        errors.rejectValue("description", "", GlobalExceptionHandler.EXCEPTION_DUPLICATE_NAME_OF_MEAL);
                     });
         }
     }

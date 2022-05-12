@@ -1,4 +1,4 @@
-package ru.zakirov.voting_system.web.meal;
+package ru.zakirov.voting_system.web.dish;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.zakirov.voting_system.model.Dish;
 import ru.zakirov.voting_system.repository.DishRepository;
-import ru.zakirov.voting_system.repository.MenuRepository;
+import ru.zakirov.voting_system.repository.RestaurantRepository;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -27,14 +27,13 @@ public class DishController {
 
     private final DishRepository repository;
 
-    private final MenuRepository menuRepository;
+    private final RestaurantRepository restaurantRepository;
+    private final UniqueNameOfDishValidator validatorDish;
 
-    private final UniqueDescriptionValidatorDish validatorDish;
 
-
-    public DishController(DishRepository repository, MenuRepository menuRepository, UniqueDescriptionValidatorDish validatorDish) {
+    public DishController(DishRepository repository, RestaurantRepository restaurantRepository, UniqueNameOfDishValidator validatorDish) {
         this.repository = repository;
-        this.menuRepository = menuRepository;
+        this.restaurantRepository = restaurantRepository;
         this.validatorDish = validatorDish;
     }
 
@@ -56,9 +55,10 @@ public class DishController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createWithLocation(@Valid @RequestBody Dish dish) {
+    public ResponseEntity<Dish> createWithLocation(@Valid @RequestBody Dish dish, int restaurantId) {
         log.info("create{}", dish);
         checkNew(dish);
+        dish.setRestaurant(restaurantRepository.findById(restaurantId).get());
         Dish created = repository.save(dish);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")

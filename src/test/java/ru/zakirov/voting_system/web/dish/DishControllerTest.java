@@ -1,4 +1,4 @@
-package ru.zakirov.voting_system.web.meal;
+package ru.zakirov.voting_system.web.dish;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,19 @@ import ru.zakirov.voting_system.web.GlobalExceptionHandler;
 import java.math.BigDecimal;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.zakirov.voting_system.web.meal.DishTestData.*;
+import static ru.zakirov.voting_system.web.dish.DishTestData.*;
+import static ru.zakirov.voting_system.web.dish.DishTestData.DISH1_ID;
+import static ru.zakirov.voting_system.web.restaurant.RestaurantTestData.restaurant1;
+import static ru.zakirov.voting_system.web.restaurant.RestaurantTestData.restaurant2;
 import static ru.zakirov.voting_system.web.user.UserTestData.ADMIN_MAIL;
 
-class DishRestControllerTest extends AbstractControllerTest {
-    private static final String REST_URL = MealRestController.REST_URL + '/';
+class DishControllerTest extends AbstractControllerTest {
+
+    private static final String REST_URL = DishController.REST_URL + '/';
     @Autowired
     private DishRepository dishRepository;
 
@@ -53,6 +57,7 @@ class DishRestControllerTest extends AbstractControllerTest {
     void createWithLocation() throws Exception {
         Dish newDish = DishTestData.getNew();
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
+                .param("restaurantId", "2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newDish)))
                 .andExpect(status().isCreated());
@@ -103,7 +108,7 @@ class DishRestControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        Dish invalid = new Dish(null, "K", new BigDecimal("7777777.00"));
+        Dish invalid = new Dish(null, "K", new BigDecimal("7777777.00"), restaurant1);
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
@@ -127,13 +132,13 @@ class DishRestControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicate() throws Exception {
-        Dish expected = new Dish(null, DISH_5.getName(), new BigDecimal("100"));
+        Dish expected = new Dish(null, DISH_5.getName(), new BigDecimal("100"), restaurant2);
         perform(MockMvcRequestBuilders.post("/api/admin/meals/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(content().string(containsString(GlobalExceptionHandler.EXCEPTION_DUPLICATE_DESCRIPTION_OF_MEAL)));
+                .andExpect(content().string(containsString(GlobalExceptionHandler.EXCEPTION_DUPLICATE_NAME_OF_MEAL)));
     }
 
     @Test
@@ -147,7 +152,6 @@ class DishRestControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(content().string(containsString(GlobalExceptionHandler.EXCEPTION_DUPLICATE_DESCRIPTION_OF_MEAL)));
+                .andExpect(content().string(containsString(GlobalExceptionHandler.EXCEPTION_DUPLICATE_NAME_OF_MEAL)));
     }
-
 }

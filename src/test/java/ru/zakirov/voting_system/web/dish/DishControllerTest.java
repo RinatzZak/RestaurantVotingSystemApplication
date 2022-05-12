@@ -74,6 +74,7 @@ class DishControllerTest extends AbstractControllerTest {
     void update() throws Exception {
         Dish updated = DishTestData.getUpdated();
         perform(MockMvcRequestBuilders.put(REST_URL + DISH1_ID)
+                .param("restaurantId", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());

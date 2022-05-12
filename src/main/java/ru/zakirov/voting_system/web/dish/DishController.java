@@ -69,9 +69,10 @@ public class DishController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@Valid @RequestBody Dish dish, @PathVariable int id) {
+    public void update(@Valid @RequestBody Dish dish, @PathVariable int id, Integer restaurantId) {
         log.info("update {} with id {}", dish, id);
         assureIdConsistent(dish, id);
+        dish.setRestaurant(restaurantRepository.findById(restaurantId).get());
         repository.save(dish);
     }
 

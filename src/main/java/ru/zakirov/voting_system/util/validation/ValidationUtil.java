@@ -11,7 +11,11 @@ import java.time.LocalTime;
 @UtilityClass
 public class ValidationUtil {
 
-    public static final LocalTime FRONTIER = LocalTime.of(11, 0);
+    public static LocalTime FRONTIER = LocalTime.of(11, 0);
+
+    public static void setFRONTIER(LocalTime time) {
+        ValidationUtil.FRONTIER = time;
+    }
 
     public static void checkNew(HasId bean) {
         if (!bean.isNew()) {

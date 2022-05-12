@@ -21,8 +21,8 @@ import static ru.zakirov.voting_system.util.validation.ValidationUtil.checkNew;
 
 @RestController
 @Slf4j
-@RequestMapping(value = MealRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class MealRestController {
+@RequestMapping(value = DishController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class DishController {
     static final String REST_URL = "/api/admin/meals";
 
     private final DishRepository repository;
@@ -32,7 +32,7 @@ public class MealRestController {
     private final UniqueDescriptionValidatorDish validatorDish;
 
 
-    public MealRestController(DishRepository repository, MenuRepository menuRepository, UniqueDescriptionValidatorDish validatorDish) {
+    public DishController(DishRepository repository, MenuRepository menuRepository, UniqueDescriptionValidatorDish validatorDish) {
         this.repository = repository;
         this.menuRepository = menuRepository;
         this.validatorDish = validatorDish;

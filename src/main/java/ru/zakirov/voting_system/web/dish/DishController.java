@@ -55,7 +55,7 @@ public class DishController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createWithLocation(@Valid @RequestBody Dish dish, int restaurantId) {
+    public ResponseEntity<Dish> createWithLocation(@Valid @RequestBody Dish dish, Integer restaurantId) {
         log.info("create{}", dish);
         checkNew(dish);
         dish.setRestaurant(restaurantRepository.findById(restaurantId).get());

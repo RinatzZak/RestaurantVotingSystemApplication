@@ -40,7 +40,7 @@ class DishControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.get(REST_URL + DISH1_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(DISH_MATCHER.contentJson(DISH_1));
+                .andExpect(DISH_MATCHER.contentJson(dish1));
     }
 
     @Test
@@ -120,7 +120,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalid() throws Exception {
-        Dish invalid = new Dish(DISH_1);
+        Dish invalid = new Dish(dish1);
         invalid.setName("");
         perform(MockMvcRequestBuilders.put(REST_URL + DISH1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -133,7 +133,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicate() throws Exception {
-        Dish expected = new Dish(null, DISH_5.getName(), new BigDecimal("100"), restaurant2);
+        Dish expected = new Dish(null, dish5.getName(), new BigDecimal("100"), restaurant2);
         perform(MockMvcRequestBuilders.post("/api/admin/meals/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
@@ -146,8 +146,8 @@ class DishControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void updateDuplicate() throws Exception {
-        Dish updated = new Dish(DISH_1);
-        updated.setName(DISH_8.getName());
+        Dish updated = new Dish(dish1);
+        updated.setName(dish8.getName());
         perform(MockMvcRequestBuilders.put("/api/admin/meals/" + DISH1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))

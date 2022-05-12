@@ -10,9 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.zakirov.voting_system.model.Menu;
 import ru.zakirov.voting_system.model.Restaurant;
-import ru.zakirov.voting_system.repository.MenuRepository;
 import ru.zakirov.voting_system.repository.RestaurantRepository;
 
 import javax.validation.Valid;
@@ -27,17 +25,14 @@ import static ru.zakirov.voting_system.util.validation.ValidationUtil.checkNew;
 @Slf4j
 @CacheConfig(cacheNames = "restaurants")
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantRestController {
+public class RestaurantController {
 
     private final RestaurantRepository repository;
 
-    private final MenuRepository menuRepository;
+    private final UniqueNameValidator validator;
 
-    private final UniqueDescriptionValidator validator;
-
-    public RestaurantRestController(RestaurantRepository repository, MenuRepository menuRepository, UniqueDescriptionValidator validator) {
+    public RestaurantController(RestaurantRepository repository, UniqueNameValidator validator) {
         this.repository = repository;
-        this.menuRepository = menuRepository;
         this.validator = validator;
     }
 
@@ -57,11 +52,6 @@ public class RestaurantRestController {
     @Transactional
     public void delete(@PathVariable int id) {
         log.info("delete {}", id);
-        Menu menu = menuRepository.getByRestaurantId(id);
-        if (menu != null) {
-            menuRepository.delete(menuRepository.getByRestaurantId(id));
-            menuRepository.flush();
-        }
         repository.deleteExisted(id);
     }
 
@@ -89,8 +79,6 @@ public class RestaurantRestController {
     public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
         log.info("update restaurant with id{}", id);
         assureIdConsistent(restaurant, id);
-        restaurant.setDescription(restaurant.getDescription());
-        restaurant.setAddress(restaurant.getAddress());
         repository.save(restaurant);
     }
 }

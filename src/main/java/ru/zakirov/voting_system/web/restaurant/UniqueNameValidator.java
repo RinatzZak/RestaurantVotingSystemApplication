@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Component
 @AllArgsConstructor
-public class UniqueDescriptionValidator implements Validator {
+public class UniqueNameValidator implements Validator {
     private final RestaurantRepository restaurantRepository;
     private final HttpServletRequest request;
 
@@ -26,8 +26,8 @@ public class UniqueDescriptionValidator implements Validator {
     @Override
     public void validate(@NonNull Object target, @NonNull Errors errors) {
         Restaurant restaurant = (Restaurant) target;
-        if (StringUtils.hasText(restaurant.getDescription())) {
-            restaurantRepository.getByDescriptionIgnoreCase(restaurant.getDescription())
+        if (StringUtils.hasText(restaurant.getName())) {
+            restaurantRepository.getByNameIgnoreCase(restaurant.getName())
                     .ifPresent(dbRestaurant ->
                     {
                         if (request.getMethod().equals("PUT")) {
@@ -39,7 +39,7 @@ public class UniqueDescriptionValidator implements Validator {
                             if (requestURI.endsWith("/" + dbId))
                                 return;
                         }
-                        errors.rejectValue("description", "", GlobalExceptionHandler.EXCEPTION_DUPLICATE_DESCRIPTION_OF_RESTAURANT);
+                        errors.rejectValue("name", "", GlobalExceptionHandler.EXCEPTION_DUPLICATE_NAME_OF_RESTAURANT);
                     });
         }
     }

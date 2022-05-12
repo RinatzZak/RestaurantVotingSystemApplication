@@ -37,7 +37,7 @@ public class Menu extends BaseEntity {
                     joinColumns = @JoinColumn(name = "menu_id", nullable = false),
                     inverseJoinColumns = @JoinColumn(name = "meals_id")
             )
-    private List<Meal> meals = new ArrayList<>();
+    private List<Dish> dishes = new ArrayList<>();
 
     public Menu(Integer id, LocalDate dateAdded) {
         super(id);
@@ -47,10 +47,10 @@ public class Menu extends BaseEntity {
     public Menu() {
     }
 
-    public Menu(Integer id, LocalDate dateAdded, Restaurant restaurant, List<Meal> meals) {
+    public Menu(Integer id, LocalDate dateAdded, Restaurant restaurant, List<Dish> dishes) {
         super(id);
         this.dateAdded = dateAdded;
         this.restaurant = restaurant;
-        setMeals(meals);
+        setDishes(dishes);
     }
 }

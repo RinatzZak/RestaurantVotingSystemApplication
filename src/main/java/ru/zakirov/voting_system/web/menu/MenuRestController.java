@@ -67,7 +67,7 @@ public class MenuRestController {
         log.info("create{} for restaurant{}", menu, restaurant_id);
         checkEmpty(menuRepository.getByRestaurantId(restaurant_id));
         menu.setRestaurant(restaurantRepository.getById(restaurant_id));
-        menu.setMeals(menu.getMeals());
+        menu.setDishes(menu.getDishes());
         Menu created = menuRepository.save(menu);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/admin/restaurants/{restaurant_id}/menu")
@@ -81,7 +81,7 @@ public class MenuRestController {
         log.info("update menu for restaurant{}", restaurant_id);
         assureIdConsistent(menu, menu_id);
         menu.setDateAdded(menu.getDateAdded());
-        menu.setMeals(menu.getMeals());
+        menu.setDishes(menu.getDishes());
         menuRepository.save(menu);
     }
 
@@ -90,7 +90,7 @@ public class MenuRestController {
     public void addingMealToMenu(@PathVariable int restaurant_id, @PathVariable int meals_id) {
         log.info("add meal{} to menu from restaurant{}", meals_id, restaurant_id);
         Menu menu = getForRestaurant(restaurant_id);
-        menu.getMeals().add(mealRepository.getById(meals_id));
+        menu.getDishes().add(mealRepository.getById(meals_id));
         menuRepository.save(menu);
     }
 
@@ -100,7 +100,7 @@ public class MenuRestController {
     public void removingMealFromMenu(@PathVariable int restaurant_id, @PathVariable int meals_id) {
         log.info("delete meal{} from restaurant{} menu", meals_id, restaurant_id);
         Menu menu = getForRestaurant(restaurant_id);
-        menu.getMeals().remove(mealRepository.getById(meals_id));
+        menu.getDishes().remove(mealRepository.getById(meals_id));
         menuRepository.save(menu);
     }
 }

@@ -38,7 +38,7 @@ public class UniqueNameOfDishValidator implements Validator {
                             if (requestURI.endsWith("/" + dbId))
                                 return;
                         }
-                        errors.rejectValue("description", "", GlobalExceptionHandler.EXCEPTION_DUPLICATE_NAME_OF_MEAL);
+                        errors.rejectValue("name", "", GlobalExceptionHandler.EXCEPTION_DUPLICATE_NAME_OF_MEAL);
                     });
         }
     }

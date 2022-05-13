@@ -17,7 +17,7 @@ import java.util.Objects;
 @Slf4j
 @CacheConfig(cacheNames = "restaurants")
 @RequestMapping(value = UserRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserRestaurantController {
+public class UserRestaurantController extends AbstractRestaurantController {
 
     public static final String REST_URL = "/api/restaurant";
     private final RestaurantRepository repository;
@@ -26,5 +26,9 @@ public class UserRestaurantController {
         this.repository = repository;
     }
 
-
+    @Override
+    @GetMapping("/{id}/with-today-dishes")
+    public ResponseEntity<Restaurant> getWithTodayDish(@PathVariable int id) {
+        return super.getWithTodayDish(id);
+    }
 }

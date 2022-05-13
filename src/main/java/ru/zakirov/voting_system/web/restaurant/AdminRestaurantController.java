@@ -51,6 +51,11 @@ public class AdminRestaurantController extends AbstractRestaurantController{
         return ResponseEntity.of(repository.findById(id));
     }
 
+    @Override
+    @GetMapping("/{id}/with-today-dishes")
+    public ResponseEntity<Restaurant> getWithTodayDish(@PathVariable int id) {
+        return super.getWithTodayDish(id);
+    }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

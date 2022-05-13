@@ -14,4 +14,7 @@ public interface RestaurantRepository extends BaseRepository<Restaurant> {
 
     @Query("select r from Restaurant r join fetch r.dishes d where r.id=?1 and d.date=?2")
     Optional<Restaurant> getWithTodayDishes(int id, LocalDate date);
+
+    @Query("select r from Restaurant r join fetch r.dishes d where r.id=?1 and d.date=?2")
+    Optional<Restaurant> getWithDishesWithSomeDate(int id, LocalDate date);
 }

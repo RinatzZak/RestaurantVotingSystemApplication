@@ -2,7 +2,6 @@ package ru.zakirov.voting_system.web.restaurant;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,7 +19,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 import static ru.zakirov.voting_system.util.validation.ValidationUtil.assureIdConsistent;
 import static ru.zakirov.voting_system.util.validation.ValidationUtil.checkNew;
@@ -28,8 +26,8 @@ import static ru.zakirov.voting_system.util.validation.ValidationUtil.checkNew;
 @RestController
 @Slf4j
 @CacheConfig(cacheNames = "restaurants")
-@RequestMapping(value = AdminRestaurantController.REST_URL,produces = MediaType.APPLICATION_JSON_VALUE)
-public class AdminRestaurantController extends AbstractRestaurantController{
+@RequestMapping(value = AdminRestaurantController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class AdminRestaurantController extends AbstractRestaurantController {
 
     public static final String REST_URL = "/api/admin/restaurants";
     private final RestaurantRepository repository;

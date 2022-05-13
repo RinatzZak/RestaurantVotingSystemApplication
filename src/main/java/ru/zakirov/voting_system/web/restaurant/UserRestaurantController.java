@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.zakirov.voting_system.model.Restaurant;
-import ru.zakirov.voting_system.repository.RestaurantRepository;
 
 import java.util.List;
 

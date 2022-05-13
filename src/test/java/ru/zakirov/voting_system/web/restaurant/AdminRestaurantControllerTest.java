@@ -14,6 +14,8 @@ import ru.zakirov.voting_system.util.JsonUtil;
 import ru.zakirov.voting_system.web.AbstractControllerTest;
 import ru.zakirov.voting_system.web.GlobalExceptionHandler;
 
+import java.util.Set;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -22,7 +24,7 @@ import static ru.zakirov.voting_system.web.restaurant.RestaurantTestData.*;
 import static ru.zakirov.voting_system.web.user.UserTestData.ADMIN_MAIL;
 import static ru.zakirov.voting_system.web.user.UserTestData.USER_MAIL;
 
-class RestaurantControllerTest extends AbstractControllerTest {
+class AdminRestaurantControllerTest extends AbstractControllerTest {
 
     @Autowired
     private RestaurantRepository repository;

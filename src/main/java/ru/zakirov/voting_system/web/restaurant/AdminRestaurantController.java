@@ -60,7 +60,7 @@ public class AdminRestaurantController extends AbstractRestaurantController{
     @GetMapping("/{id}/history")
     public ResponseEntity<Restaurant> getWithDishesWithSomeDate(@PathVariable int id, String date) {
         log.info("getWithDishesWithSomeDate for rest{} and date{}", id, date);
-        return ResponseEntity.of(repository.getWithDishesWithSomeDate(id, LocalDate.parse(date)));
+        return ResponseEntity.of(repository.getWithDishesWithDate(id, LocalDate.parse(date)));
     }
 
     @DeleteMapping("/{id}")
@@ -77,7 +77,11 @@ public class AdminRestaurantController extends AbstractRestaurantController{
         return repository.findAll();
     }
 
-
+    @Override
+    @GetMapping("/all-with-dishes")
+    public List<Restaurant> getAllWithTodayDishes() {
+        return super.getAllWithTodayDishes();
+    }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody RestaurantTo restaurantTo) {

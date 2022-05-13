@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.zakirov.voting_system.model.Restaurant;
 import ru.zakirov.voting_system.repository.RestaurantRepository;
 
-import java.util.Objects;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -30,5 +30,11 @@ public class UserRestaurantController extends AbstractRestaurantController {
     @GetMapping("/{id}/with-today-dishes")
     public ResponseEntity<Restaurant> getWithTodayDish(@PathVariable int id) {
         return super.getWithTodayDish(id);
+    }
+
+    @Override
+    @GetMapping("/all-with-dishes")
+    public List<Restaurant> getAllWithTodayDishes() {
+        return super.getAllWithTodayDishes();
     }
 }

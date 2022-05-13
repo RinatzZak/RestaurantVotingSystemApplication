@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.zakirov.voting_system.model.Restaurant;
 import ru.zakirov.voting_system.repository.RestaurantRepository;
+import ru.zakirov.voting_system.to.RestaurantTo;
+import ru.zakirov.voting_system.util.RestaurantUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,14 +27,15 @@ import static ru.zakirov.voting_system.util.validation.ValidationUtil.checkNew;
 @RestController
 @Slf4j
 @CacheConfig(cacheNames = "restaurants")
-@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantController {
+@RequestMapping(value = AdminRestaurantController.REST_URL,produces = MediaType.APPLICATION_JSON_VALUE)
+public class AdminRestaurantController extends AbstractRestaurantController{
 
+    public static final String REST_URL = "/api/admin/restaurants";
     private final RestaurantRepository repository;
 
     private final UniqueNameValidator validator;
 
-    public RestaurantController(RestaurantRepository repository, UniqueNameValidator validator) {
+    public AdminRestaurantController(RestaurantRepository repository, UniqueNameValidator validator) {
         this.repository = repository;
         this.validator = validator;
     }
@@ -41,13 +45,14 @@ public class RestaurantController {
         binder.addValidators(validator);
     }
 
-    @GetMapping("/api/restaurants/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Restaurant> get(@PathVariable int id) {
         log.info("get{}", id);
-        return ResponseEntity.of(Objects.requireNonNull(repository.findById(id)));
+        return ResponseEntity.of(repository.findById(id));
     }
 
-    @DeleteMapping("/api/admin/restaurants/{id}")
+
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
     public void delete(@PathVariable int id) {
@@ -55,30 +60,30 @@ public class RestaurantController {
         repository.deleteExisted(id);
     }
 
-    @GetMapping("/api/restaurants")
+    @GetMapping
     public List<Restaurant> getAll() {
         log.info("getAll");
         return repository.findAll();
     }
 
-    @PostMapping(value = "/api/admin/restaurants", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @CacheEvict(allEntries = true)
-    public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
-        log.info("create{}", restaurant);
-        checkNew(restaurant);
-        Restaurant created = repository.save(restaurant);
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody RestaurantTo restaurantTo) {
+        log.info("create{}", restaurantTo);
+        checkNew(restaurantTo);
+        Restaurant created = repository.save(RestaurantUtil.createNewFromTo(restaurantTo));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/admin/restaurants")
+                .path(REST_URL)
                 .buildAndExpand(created.getId()).toUri();
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @PutMapping(value = "/api/admin/restaurants/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int id) {
+    public void update(@Valid @RequestBody RestaurantTo restaurantTo, @PathVariable int id) {
         log.info("update restaurant with id{}", id);
-        assureIdConsistent(restaurant, id);
-        repository.save(restaurant);
+        assureIdConsistent(restaurantTo, id);
+        Restaurant restaurant = repository.getById(id);
+        repository.save(RestaurantUtil.updateFromTo(restaurant, restaurantTo));
     }
 }

@@ -21,11 +21,6 @@ import java.util.List;
 public class UserRestaurantController extends AbstractRestaurantController {
 
     public static final String REST_URL = "/api/restaurant";
-    private final RestaurantRepository repository;
-
-    public UserRestaurantController(RestaurantRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     @GetMapping("/{id}/with-today-dishes")

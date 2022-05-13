@@ -27,12 +27,4 @@ public class DishTestData {
     public static final Dish dish9 = new Dish(DISH1_ID + 8, "Apple ice cream", LocalDate.now(), new BigDecimal("51.00"));
 
     public static final List<Dish> DISHES = Arrays.asList(dish1, dish2, dish3, dish4, dish5, dish6, dish7, dish8, dish9);
-
-    public static Dish getNew() {
-        return new Dish(null, "NewDish", LocalDate.now(), new BigDecimal(777));
-    }
-
-    public static Dish getUpdated() {
-        return new Dish(DISH1_ID, "UpdatedDish", LocalDate.of(2020,10,10), new BigDecimal(111));
-    }
 }

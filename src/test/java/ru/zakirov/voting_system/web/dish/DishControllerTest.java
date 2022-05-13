@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.zakirov.voting_system.model.Dish;
 import ru.zakirov.voting_system.repository.DishRepository;
+import ru.zakirov.voting_system.to.DishTo;
+import ru.zakirov.voting_system.util.DishUtil;
 import ru.zakirov.voting_system.util.JsonUtil;
 import ru.zakirov.voting_system.web.AbstractControllerTest;
 import ru.zakirov.voting_system.web.GlobalExceptionHandler;
@@ -18,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -42,6 +45,12 @@ class DishControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    void getUnAuth() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + DISH1_ID))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
@@ -53,7 +62,8 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
-        Dish newDish = DishTestData.getNew();
+        DishTo dishTo = new DishTo(null, "Voda", LocalDate.now(), new BigDecimal("111"));
+        Dish newDish = DishUtil.createNewFromTo(dishTo);
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .param("restaurantId", "2")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -70,14 +80,15 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
-        Dish updated = DishTestData.getUpdated();
+        DishTo updatedTo = new DishTo(null, "Bread",  LocalDate.of(2020,10,10), new BigDecimal("50"));
         perform(MockMvcRequestBuilders.put(REST_URL + DISH1_ID)
                 .param("restaurantId", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .content(JsonUtil.writeValue(updatedTo)))
+                .andDo(print())
                 .andExpect(status().isNoContent());
 
-        DISH_MATCHER.assertMatch(dishRepository.getById(DISH1_ID), updated);
+        assertEquals(dishRepository.getById(DISH1_ID), DishUtil.updateFromTo(new Dish(dish1), updatedTo));
     }
 
     @Test
@@ -125,32 +136,5 @@ class DishControllerTest extends AbstractControllerTest {
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
-    }
-
-    @Test
-    @Transactional(propagation = Propagation.NEVER)
-    @WithUserDetails(value = ADMIN_MAIL)
-    void createDuplicate() throws Exception {
-        Dish expected = new Dish(null, dish5.getName(), LocalDate.now(), new BigDecimal("100"));
-        perform(MockMvcRequestBuilders.post("/api/admin/meals/")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(expected)))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(content().string(containsString(GlobalExceptionHandler.EXCEPTION_DUPLICATE_NAME_OF_MEAL)));
-    }
-
-    @Test
-    @Transactional(propagation = Propagation.NEVER)
-    @WithUserDetails(value = ADMIN_MAIL)
-    void updateDuplicate() throws Exception {
-        Dish updated = new Dish(dish1);
-        updated.setName(dish8.getName());
-        perform(MockMvcRequestBuilders.put("/api/admin/meals/" + DISH1_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
-                .andDo(print())
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(content().string(containsString(GlobalExceptionHandler.EXCEPTION_DUPLICATE_NAME_OF_MEAL)));
     }
 }

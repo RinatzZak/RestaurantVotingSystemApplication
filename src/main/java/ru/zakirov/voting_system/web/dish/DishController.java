@@ -30,18 +30,10 @@ public class DishController {
     private final DishRepository repository;
 
     private final RestaurantRepository restaurantRepository;
-    private final UniqueNameOfDishValidator validatorDish;
 
-
-    public DishController(DishRepository repository, RestaurantRepository restaurantRepository, UniqueNameOfDishValidator validatorDish) {
+    public DishController(DishRepository repository, RestaurantRepository restaurantRepository) {
         this.repository = repository;
         this.restaurantRepository = restaurantRepository;
-        this.validatorDish = validatorDish;
-    }
-
-    @InitBinder
-    protected void initBinder(WebDataBinder binder) {
-        binder.addValidators(validatorDish);
     }
 
     @GetMapping("/{id}")

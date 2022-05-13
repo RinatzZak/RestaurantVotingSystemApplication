@@ -2,6 +2,7 @@ package ru.zakirov.voting_system.web.restaurant;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +35,7 @@ public class UserRestaurantController extends AbstractRestaurantController {
 
     @Override
     @GetMapping("/all-with-dishes")
+    @Cacheable
     public List<Restaurant> getAllWithTodayDishes() {
         return super.getAllWithTodayDishes();
     }

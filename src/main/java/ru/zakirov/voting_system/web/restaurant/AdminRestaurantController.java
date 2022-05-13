@@ -3,6 +3,7 @@ package ru.zakirov.voting_system.web.restaurant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -79,6 +80,7 @@ public class AdminRestaurantController extends AbstractRestaurantController{
 
     @Override
     @GetMapping("/all-with-dishes")
+    @Cacheable
     public List<Restaurant> getAllWithTodayDishes() {
         return super.getAllWithTodayDishes();
     }

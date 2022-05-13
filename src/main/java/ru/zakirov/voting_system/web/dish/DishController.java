@@ -11,6 +11,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.zakirov.voting_system.model.Dish;
 import ru.zakirov.voting_system.repository.DishRepository;
 import ru.zakirov.voting_system.repository.RestaurantRepository;
+import ru.zakirov.voting_system.to.DishTo;
+import ru.zakirov.voting_system.util.DishUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -55,11 +57,12 @@ public class DishController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Dish> createWithLocation(@Valid @RequestBody Dish dish, Integer restaurantId) {
-        log.info("create{}", dish);
-        checkNew(dish);
-        dish.setRestaurant(restaurantRepository.findById(restaurantId).get());
-        Dish created = repository.save(dish);
+    public ResponseEntity<Dish> createWithLocation(@Valid @RequestBody DishTo dishTo, Integer restaurantId) {
+        log.info("create{}", dishTo);
+        checkNew(dishTo);
+        Dish created = DishUtil.createNewFromTo(dishTo);
+        created.setRestaurant(restaurantRepository.findById(restaurantId).get());
+        repository.save(created);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -69,11 +72,13 @@ public class DishController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
-    public void update(@Valid @RequestBody Dish dish, @PathVariable int id, Integer restaurantId) {
-        log.info("update {} with id {}", dish, id);
-        assureIdConsistent(dish, id);
-        dish.setRestaurant(restaurantRepository.findById(restaurantId).get());
-        repository.save(dish);
+    public void update(@Valid @RequestBody DishTo dishTo, @PathVariable int id, Integer restaurantId) {
+        log.info("update {} with id {}", dishTo, id);
+        assureIdConsistent(dishTo, id);
+        Dish dish = repository.getById(id);
+        Dish updated = DishUtil.updateFromTo(dish, dishTo);
+        updated.setRestaurant(restaurantRepository.findById(restaurantId).get());
+        repository.save(updated);
     }
 
     @DeleteMapping("/{id}")

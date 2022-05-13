@@ -13,16 +13,16 @@ VALUES ('193 Synods Street Eden Terrace', 'Kazuya'),
        ('Level 1/12 Wyndham Street', 'Culprit'),
        ('95-97 Customs Street West Market Square', 'Hello Beasty');
 
-INSERT INTO DISH (name, price, RESTAURANT_ID)
-VALUES ('Rice with seafood', 400.00, 1),
-       ('Soup puree', 300.00, 2),
-       ('Royal roast beef', 600.00, 3),
-       ('Orange juice', 10.00, 1),
-       ('Coffee', 10.00, 2),
-       ('Milk cocktail', 20.00, 3),
-       ('Orange ice cream', 50.00, 1),
-       ('Cherry ice cream', 55.00, 2),
-       ('Apple ice cream', 51.00, 3);
+INSERT INTO DISH (name, DATE_ADDED, price, RESTAURANT_ID)
+VALUES ('Rice with seafood', '2020-10-10', 400.00, 1),
+       ('Soup puree', '2020-10-10', 300.00, 2),
+       ('Royal roast beef', '2020-10-10', 600.00, 3),
+       ('Orange juice', '2020-10-10', 10.00, 1),
+       ('Coffee', '2020-10-10', 10.00, 2),
+       ('Milk cocktail', '2020-10-10', 20.00, 3),
+       ('Orange ice cream', current_date, 50.00, 1),
+       ('Cherry ice cream', current_date, 55.00, 2),
+       ('Apple ice cream', current_date, 51.00, 3);
 
 INSERT INTO VOTE (DATE_ADDED, RESTAURANT_ID, USER_ID)
 VALUES ('2020-10-10', 1, 1),

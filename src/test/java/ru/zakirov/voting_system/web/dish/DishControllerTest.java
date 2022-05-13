@@ -15,16 +15,14 @@ import ru.zakirov.voting_system.web.AbstractControllerTest;
 import ru.zakirov.voting_system.web.GlobalExceptionHandler;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static ru.zakirov.voting_system.web.dish.DishTestData.*;
-import static ru.zakirov.voting_system.web.dish.DishTestData.DISH1_ID;
-import static ru.zakirov.voting_system.web.restaurant.RestaurantTestData.restaurant1;
-import static ru.zakirov.voting_system.web.restaurant.RestaurantTestData.restaurant2;
 import static ru.zakirov.voting_system.web.user.UserTestData.ADMIN_MAIL;
 
 class DishControllerTest extends AbstractControllerTest {
@@ -109,7 +107,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        Dish invalid = new Dish(null, "K", new BigDecimal("7777777.00"), restaurant1);
+        Dish invalid = new Dish(null, "K", LocalDate.now(), new BigDecimal("7777777.00"));
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
@@ -133,7 +131,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Transactional(propagation = Propagation.NEVER)
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicate() throws Exception {
-        Dish expected = new Dish(null, dish5.getName(), new BigDecimal("100"), restaurant2);
+        Dish expected = new Dish(null, dish5.getName(), LocalDate.now(), new BigDecimal("100"));
         perform(MockMvcRequestBuilders.post("/api/admin/meals/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))

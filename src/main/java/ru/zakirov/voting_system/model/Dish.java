@@ -1,6 +1,8 @@
 package ru.zakirov.voting_system.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,10 +10,12 @@ import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
+import ru.zakirov.voting_system.util.validation.NoHtml;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "dish")
@@ -20,6 +24,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @ToString
 public class Dish extends NamedEntity {
+
+    @Column(name = "date_added", nullable = false)
+    @NotNull
+    private LocalDate date;
 
     @Column(name = "price", nullable = false)
     @NotNull
@@ -30,16 +38,17 @@ public class Dish extends NamedEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonBackReference
     @ToString.Exclude
-    @JsonIgnore
     private Restaurant restaurant;
 
-    public Dish(Integer id, String name, BigDecimal price, Restaurant restaurant) {
+    public Dish(Integer id, String name, LocalDate date, BigDecimal price) {
         super(id, name);
+        this.date = date;
         this.price = price;
     }
     public Dish(Dish d) {
-        this(d.id, d.name, d.price, d.restaurant);
+        this(d.id, d.name, d.date, d.price);
     }
 
 }

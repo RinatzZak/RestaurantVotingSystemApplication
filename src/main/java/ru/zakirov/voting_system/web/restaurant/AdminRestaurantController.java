@@ -21,8 +21,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
-import static ru.zakirov.voting_system.util.validation.ValidationUtil.assureIdConsistent;
-import static ru.zakirov.voting_system.util.validation.ValidationUtil.checkNew;
+import static ru.zakirov.voting_system.util.validation.ValidationUtil.*;
 
 @RestController
 @Slf4j
@@ -58,8 +57,10 @@ public class AdminRestaurantController extends AbstractRestaurantController {
     }
 
     @GetMapping("/{id}/history")
+    @Transactional
     public ResponseEntity<Restaurant> getWithDishesWithSomeDate(@PathVariable int id, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date ) {
         log.info("getWithDishesWithSomeDate for rest{} and date{}", id, date);
+        checkEmpty(repository.getWithDishesWithDate(id, date));
         return ResponseEntity.of(repository.getWithDishesWithDate(id, date));
     }
 

@@ -5,8 +5,10 @@ import org.springframework.core.NestedExceptionUtils;
 import org.springframework.lang.NonNull;
 import ru.zakirov.voting_system.HasId;
 import ru.zakirov.voting_system.error.IllegalRequestDataException;
+import ru.zakirov.voting_system.model.Restaurant;
 
 import java.time.LocalTime;
+import java.util.Optional;
 
 @UtilityClass
 public class ValidationUtil {
@@ -58,6 +60,12 @@ public class ValidationUtil {
     public static void checkForNotNull(Object e) {
         if (e == null) {
             throw new IllegalRequestDataException("Entity not found!");
+        }
+    }
+
+    public static void checkEmpty(Optional<Restaurant> list) {
+        if (list.isEmpty()) {
+            throw  new IllegalRequestDataException("Not found at this date");
         }
     }
 }

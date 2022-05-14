@@ -8,6 +8,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.zakirov.voting_system.model.Restaurant;
 import ru.zakirov.voting_system.repository.RestaurantRepository;
+import ru.zakirov.voting_system.to.RestaurantTo;
 import ru.zakirov.voting_system.web.GlobalExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +21,12 @@ public class UniqueNameValidator implements Validator {
 
     @Override
     public boolean supports(@NonNull Class<?> clazz) {
-        return Restaurant.class.isAssignableFrom(clazz);
+        return RestaurantTo.class.isAssignableFrom(clazz);
     }
 
     @Override
     public void validate(@NonNull Object target, @NonNull Errors errors) {
-        Restaurant restaurant = (Restaurant) target;
+        RestaurantTo restaurant = (RestaurantTo) target;
         if (StringUtils.hasText(restaurant.getName())) {
             restaurantRepository.getByNameIgnoreCase(restaurant.getName())
                     .ifPresent(dbRestaurant ->

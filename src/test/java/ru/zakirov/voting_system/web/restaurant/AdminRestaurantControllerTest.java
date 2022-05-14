@@ -17,13 +17,14 @@ import ru.zakirov.voting_system.web.AbstractControllerTest;
 import ru.zakirov.voting_system.web.GlobalExceptionHandler;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.zakirov.voting_system.web.dish.DishTestData.*;
 import static ru.zakirov.voting_system.web.restaurant.RestaurantTestData.*;
 import static ru.zakirov.voting_system.web.user.UserTestData.ADMIN_MAIL;
-import static ru.zakirov.voting_system.web.user.UserTestData.USER_MAIL;
 
 class AdminRestaurantControllerTest extends AbstractControllerTest {
 
@@ -68,6 +69,27 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    @WithUserDetails(ADMIN_MAIL)
+    void getWithDishesWithSomeDate() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + (RESTAURANT1_ID + 3) + "/history")
+                .param("date", "2020-10-10"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(RESTAURANT_WITH_DISH_MATCHER.contentJson(restaurant4));
+    }
+
+    @Test
+    @WithUserDetails(ADMIN_MAIL)
+    void getWithDishesWithSomeDateNotFound() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + (RESTAURANT1_ID + 3) + "/history")
+                .param("date", "2020-10-11"))
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+
+
+    @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void getAll() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
@@ -105,13 +127,13 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
-        RestaurantTo updated = new RestaurantTo(null, "Sinnlig", "Street 40H");
+        RestaurantTo updated = new RestaurantTo(null,"Sinnlig", "Street 40H");
         perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
 
-        RESTAURANT_MATCHER.assertMatch(repository.getById(RESTAURANT1_ID), RestaurantUtil.updateFromTo(new Restaurant(restaurant1), updated));
+        assertEquals(repository.getById(RESTAURANT1_ID), RestaurantUtil.updateFromTo(new Restaurant(restaurant1), updated));
     }
 
     @Test

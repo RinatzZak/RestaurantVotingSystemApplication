@@ -52,6 +52,12 @@ public class VoteController {
         return ResponseEntity.of(voteRepository.findByIdAndDate(userId, LocalDate.now()));
     }
 
+    @GetMapping("/all-today-votes")
+    public List<Vote> getAllToday() {
+        log.info("getAllTodayVotes");
+        return voteRepository.findAllByDate(LocalDate.now());
+    }
+
     @PostMapping()
     @Transactional
     public ResponseEntity<Vote> create(Integer restaurantId) {

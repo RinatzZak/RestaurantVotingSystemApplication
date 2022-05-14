@@ -32,12 +32,27 @@ class VoteControllerTest extends AbstractControllerTest {
     private VoteRepository repository;
 
     @Test
+    void getUnAuth() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     @WithUserDetails(value = USER_MAIL)
     void getAllMyVotes() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "my-votes"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(VOTE_MATCHER.contentJson(myVotes));
+    }
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void getAllToday() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL + "all-today-votes"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(VOTE_MATCHER.contentJson(votesToday));
     }
 
     @Test

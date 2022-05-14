@@ -14,8 +14,6 @@ import ru.zakirov.voting_system.util.JsonUtil;
 import ru.zakirov.voting_system.web.AbstractControllerTest;
 import ru.zakirov.voting_system.web.GlobalExceptionHandler;
 
-import java.util.Set;
-
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -26,13 +24,15 @@ import static ru.zakirov.voting_system.web.user.UserTestData.USER_MAIL;
 
 class AdminRestaurantControllerTest extends AbstractControllerTest {
 
+    private static final String REST_URL = AdminRestaurantController.REST_URL + '/';
+
     @Autowired
     private RestaurantRepository repository;
 
     @Test
     @WithUserDetails(value = USER_MAIL)
     void get() throws Exception {
-        perform(MockMvcRequestBuilders.get("/api/restaurants/" + RESTAURANT1_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + RESTAURANT1_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTAURANT_MATCHER.contentJson(restaurant1));
@@ -41,7 +41,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void delete() throws Exception {
-        perform(MockMvcRequestBuilders.delete("/api/admin/restaurants/" + RESTAURANT1_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         RESTAURANT_MATCHER.assertMatch(repository.findAll(), restaurant2, restaurant3, restaurant4);
@@ -50,7 +50,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getAll() throws Exception {
-        perform(MockMvcRequestBuilders.get("/api/restaurants/"))
+        perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTAURANT_MATCHER.contentJson(restaurants));
@@ -60,7 +60,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createWithLocation() throws Exception {
         Restaurant newRestaurant = RestaurantTestData.getNew();
-        ResultActions action = perform(MockMvcRequestBuilders.post("/api/admin/restaurants/")
+        ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newRestaurant)))
                 .andExpect(status().isCreated());
@@ -76,7 +76,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
         Restaurant updated = RestaurantTestData.getUpdated();
-        perform(MockMvcRequestBuilders.put("/api/admin/restaurants/" + RESTAURANT1_ID)
+        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isNoContent());
@@ -87,7 +87,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.get("/api/restaurants/" + NOT_FOUND_ID))
+        perform(MockMvcRequestBuilders.get(REST_URL + NOT_FOUND_ID))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -95,7 +95,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void deleteNotFound() throws Exception {
-        perform(MockMvcRequestBuilders.delete("/api/admin/restaurants/" + NOT_FOUND_ID))
+        perform(MockMvcRequestBuilders.delete(REST_URL + NOT_FOUND_ID))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
@@ -104,7 +104,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
         Restaurant invalid = new Restaurant(null, "K", "No");
-        perform(MockMvcRequestBuilders.post("/api/admin/restaurants/")
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
@@ -116,7 +116,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     void updateInvalid() throws Exception {
         Restaurant invalid = new Restaurant(restaurant1);
         invalid.setName("");
-        perform(MockMvcRequestBuilders.put("/api/admin/restaurants/" + RESTAURANT1_ID)
+        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
                 .andDo(print())
@@ -128,7 +128,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @WithUserDetails(value = ADMIN_MAIL)
     void createDuplicate() throws Exception {
         Restaurant expected = new Restaurant(null, restaurant3.getName(), "newAddress12345");
-        perform(MockMvcRequestBuilders.post("/api/admin/restaurants/")
+        perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(expected)))
                 .andDo(print())
@@ -142,7 +142,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     void updateDuplicate() throws Exception {
         Restaurant updated = new Restaurant(restaurant1);
         updated.setName(restaurant3.getName());
-        perform(MockMvcRequestBuilders.put("/api/admin/restaurants/" + RESTAURANT1_ID)
+        perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())

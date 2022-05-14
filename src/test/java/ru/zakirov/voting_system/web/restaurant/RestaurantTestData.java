@@ -4,14 +4,13 @@ import ru.zakirov.voting_system.model.Restaurant;
 import ru.zakirov.voting_system.web.MatcherFactory;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static ru.zakirov.voting_system.web.dish.DishTestData.*;
 
 public class RestaurantTestData {
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class);
-    public static final MatcherFactory.Matcher<Restaurant>RESTAURANT_WITH_DISH_MATCHER = MatcherFactory.usingAssertions(Restaurant.class,
+    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_DISH_MATCHER = MatcherFactory.usingAssertions(Restaurant.class,
             (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields("dishes.restaurant").isEqualTo(e),
             (a, e) -> {
                 throw new UnsupportedOperationException();
@@ -29,6 +28,8 @@ public class RestaurantTestData {
 
     static {
         restaurant1.setDishes(List.of(dish7));
+        restaurant2.setDishes(List.of(dish8));
+        restaurant3.setDishes(List.of(dish9));
     }
 
     public static Restaurant getNew() {

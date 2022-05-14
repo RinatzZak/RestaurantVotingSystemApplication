@@ -31,6 +31,7 @@ class UserRestaurantControllerTest extends AbstractControllerTest {
     void getAllWithTodayDishes() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL + "all-with-dishes"))
                 .andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(RESTAURANT_MATCHER.contentJson(restaurant1, restaurant2, restaurant3));
     }

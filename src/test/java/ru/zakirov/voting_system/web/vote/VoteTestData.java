@@ -13,7 +13,7 @@ import static ru.zakirov.voting_system.web.user.UserTestData.admin;
 import static ru.zakirov.voting_system.web.user.UserTestData.user;
 
 public class VoteTestData {
-    public static final MatcherFactory.Matcher<Vote> VOTE_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "user.password", "user.registered");
+    public static final MatcherFactory.Matcher<Vote> VOTE_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Vote.class, "restaurant.address", "restaurant.dishes", "user");
 
     public static final int VOTE1_ID = 1;
 

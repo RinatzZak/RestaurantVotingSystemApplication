@@ -118,7 +118,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void createInvalid() throws Exception {
-        Dish invalid = new Dish(null, "K", LocalDate.now(), new BigDecimal("7777777.00"));
+        DishTo invalid = new DishTo(null, "K", LocalDate.now(), new BigDecimal("7777777.00"));
         perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(invalid)))
@@ -129,7 +129,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void updateInvalid() throws Exception {
-        Dish invalid = new Dish(dish1);
+        DishTo invalid = new DishTo(null, dish1.getName(), dish1.getDate(), dish1.getPrice());
         invalid.setName("");
         perform(MockMvcRequestBuilders.put(REST_URL + DISH1_ID)
                 .contentType(MediaType.APPLICATION_JSON)

@@ -4,8 +4,6 @@ import ru.zakirov.voting_system.model.Vote;
 import ru.zakirov.voting_system.web.MatcherFactory;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static ru.zakirov.voting_system.web.restaurant.RestaurantTestData.*;

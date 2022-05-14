@@ -1,8 +1,6 @@
 package ru.zakirov.voting_system.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,7 +8,6 @@ import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
-import ru.zakirov.voting_system.util.validation.NoHtml;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -34,7 +31,6 @@ public class Dish extends NamedEntity {
     @Range(min = 0, max = 300000)
     private BigDecimal price;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -47,6 +43,7 @@ public class Dish extends NamedEntity {
         this.date = date;
         this.price = price;
     }
+
     public Dish(Dish d) {
         this(d.id, d.name, d.date, d.price);
     }

@@ -58,7 +58,7 @@ public class AdminRestaurantController extends AbstractRestaurantController {
 
     @GetMapping("/{id}/history")
     @Transactional
-    public ResponseEntity<Restaurant> getWithDishesWithSomeDate(@PathVariable int id, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date ) {
+    public ResponseEntity<Restaurant> getWithDishesWithSomeDate(@PathVariable int id, @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         log.info("getWithDishesWithSomeDate for rest{} and date{}", id, date);
         checkEmpty(repository.getWithDishesWithDate(id, date));
         return ResponseEntity.of(repository.getWithDishesWithDate(id, date));

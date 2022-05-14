@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.zakirov.voting_system.model.Restaurant;
 import ru.zakirov.voting_system.repository.RestaurantRepository;
 import ru.zakirov.voting_system.to.RestaurantTo;
 import ru.zakirov.voting_system.web.GlobalExceptionHandler;

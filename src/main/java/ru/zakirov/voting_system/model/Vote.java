@@ -2,14 +2,12 @@ package ru.zakirov.voting_system.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import ru.zakirov.voting_system.to.RestaurantTo;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -31,7 +29,7 @@ public class Vote extends BaseEntity {
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
-    @JsonIgnoreProperties(value = {"address","dishes"})
+    @JsonIgnoreProperties(value = {"address", "dishes"})
     private Restaurant restaurant;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static ru.zakirov.voting_system.web.dish.DishTestData.*;
 import static ru.zakirov.voting_system.web.restaurant.RestaurantTestData.*;
 import static ru.zakirov.voting_system.web.user.UserTestData.ADMIN_MAIL;
 
@@ -88,7 +87,6 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     }
 
 
-
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void getAll() throws Exception {
@@ -104,7 +102,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
         perform(MockMvcRequestBuilders.delete(REST_URL + RESTAURANT1_ID))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-       assertFalse(repository.findById(RESTAURANT1_ID).isPresent());
+        assertFalse(repository.findById(RESTAURANT1_ID).isPresent());
     }
 
     @Test
@@ -127,7 +125,7 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
-        RestaurantTo updated = new RestaurantTo(null,"Sinnlig", "Street 40H");
+        RestaurantTo updated = new RestaurantTo(null, "Sinnlig", "Street 40H");
         perform(MockMvcRequestBuilders.put(REST_URL + RESTAURANT1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))

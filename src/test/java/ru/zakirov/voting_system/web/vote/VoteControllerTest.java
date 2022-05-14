@@ -97,21 +97,21 @@ class VoteControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void updateForAll() throws Exception {
-            Vote updated = VoteTestData.getUpdated();
-            if (FRONTIER.isAfter(LocalTime.now())) {
-                perform(MockMvcRequestBuilders.put(REST_URL)
-                        .param("restaurantId", "2")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.writeValue(updated)))
-                        .andExpect(status().isNoContent());
-                assertEquals(repository.getById(VOTE1_ID + 3), VoteTestData.getUpdated());
-            } else {
-                perform(MockMvcRequestBuilders.put(REST_URL)
-                        .param("restaurantId", "2")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(JsonUtil.writeValue(updated)))
-                        .andExpect(status().isUnprocessableEntity());
-            }
+        Vote updated = VoteTestData.getUpdated();
+        if (FRONTIER.isAfter(LocalTime.now())) {
+            perform(MockMvcRequestBuilders.put(REST_URL)
+                    .param("restaurantId", "2")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(JsonUtil.writeValue(updated)))
+                    .andExpect(status().isNoContent());
+            assertEquals(repository.getById(VOTE1_ID + 3), VoteTestData.getUpdated());
+        } else {
+            perform(MockMvcRequestBuilders.put(REST_URL)
+                    .param("restaurantId", "2")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(JsonUtil.writeValue(updated)))
+                    .andExpect(status().isUnprocessableEntity());
+        }
     }
 
     @Test

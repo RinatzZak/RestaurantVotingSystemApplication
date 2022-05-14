@@ -65,7 +65,7 @@ public class VoteController {
         Vote vote = getTodayVote().getBody();
         assureIdConsistent(restaurantRepository.getById(restaurantId), restaurantId);
         checkForNull(vote);
-        Vote created = new Vote(LocalDate.now(),restaurantRepository.getById(restaurantId), userRepository.getById(userId));
+        Vote created = new Vote(LocalDate.now(), restaurantRepository.getById(restaurantId), userRepository.getById(userId));
         voteRepository.save(created);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL).build().toUri();

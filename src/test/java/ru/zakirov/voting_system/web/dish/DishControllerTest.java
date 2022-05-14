@@ -6,20 +6,16 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import ru.zakirov.voting_system.model.Dish;
 import ru.zakirov.voting_system.repository.DishRepository;
 import ru.zakirov.voting_system.to.DishTo;
 import ru.zakirov.voting_system.util.DishUtil;
 import ru.zakirov.voting_system.util.JsonUtil;
 import ru.zakirov.voting_system.web.AbstractControllerTest;
-import ru.zakirov.voting_system.web.GlobalExceptionHandler;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -80,7 +76,7 @@ class DishControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = ADMIN_MAIL)
     void update() throws Exception {
-        DishTo updatedTo = new DishTo(null, "Bread",  LocalDate.of(2020,10,10), new BigDecimal("50"));
+        DishTo updatedTo = new DishTo(null, "Bread", LocalDate.of(2020, 10, 10), new BigDecimal("50"));
         perform(MockMvcRequestBuilders.put(REST_URL + DISH1_ID)
                 .param("restaurantId", "1")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,6 +1,5 @@
 package ru.zakirov.voting_system.to;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;

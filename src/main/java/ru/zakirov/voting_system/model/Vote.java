@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import ru.zakirov.voting_system.to.RestaurantTo;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -35,6 +36,7 @@ public class Vote extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
+    @JsonIgnore
     private User user;
 
     public Vote(Integer id, LocalDate date, Restaurant restaurant, User user) {

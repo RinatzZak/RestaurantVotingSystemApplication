@@ -23,6 +23,7 @@ public class VoteTestData {
 
     public static Vote vote4 = new Vote(VOTE1_ID + 3, LocalDate.now(), restaurant1, user);
 
+    public static List<Vote> votesToday = List.of(vote4);
 
     public static List<Vote> myVotes = List.of(vote1, vote2, vote3, vote4);
 

@@ -1,5 +1,9 @@
 package com.github.rinatzzak.votingsystem.web.restaurant;
 
+import com.github.rinatzzak.votingsystem.model.Restaurant;
+import com.github.rinatzzak.votingsystem.repository.RestaurantRepository;
+import com.github.rinatzzak.votingsystem.to.RestaurantTo;
+import com.github.rinatzzak.votingsystem.util.RestaurantUtil;
 import com.github.rinatzzak.votingsystem.util.validation.ValidationUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
@@ -12,10 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import com.github.rinatzzak.votingsystem.model.Restaurant;
-import com.github.rinatzzak.votingsystem.repository.RestaurantRepository;
-import com.github.rinatzzak.votingsystem.to.RestaurantTo;
-import com.github.rinatzzak.votingsystem.util.RestaurantUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -51,6 +51,7 @@ public class AdminRestaurantController extends AbstractRestaurantController {
 
     @Override
     @GetMapping("/{id}/with-today-dishes")
+    @Transactional
     public ResponseEntity<Restaurant> getWithTodayDish(@PathVariable int id) {
         return super.getWithTodayDish(id);
     }

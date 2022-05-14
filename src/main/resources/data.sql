@@ -22,7 +22,9 @@ VALUES ('Rice with seafood', '2020-10-10', 400.00, 1),
        ('Milk cocktail', '2020-10-10', 20.00, 3),
        ('Orange ice cream', current_date, 50.00, 1),
        ('Cherry ice cream', current_date, 55.00, 2),
-       ('Apple ice cream', current_date, 51.00, 3);
+       ('Apple ice cream', current_date, 51.00, 3),
+       ('Beer', '2020-10-10', 100.0, 4),
+       ('Beef', '2020-10-10', 200.0, 4);
 
 INSERT INTO VOTE (DATE_ADDED, RESTAURANT_ID, USER_ID)
 VALUES ('2020-10-10', 1, 1),

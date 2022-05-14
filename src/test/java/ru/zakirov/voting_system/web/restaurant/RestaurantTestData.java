@@ -1,6 +1,7 @@
 package ru.zakirov.voting_system.web.restaurant;
 
 import ru.zakirov.voting_system.model.Restaurant;
+import ru.zakirov.voting_system.to.RestaurantTo;
 import ru.zakirov.voting_system.web.MatcherFactory;
 
 import java.util.List;
@@ -9,12 +10,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static ru.zakirov.voting_system.web.dish.DishTestData.*;
 
 public class RestaurantTestData {
-    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class);
+    public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_MATCHER = MatcherFactory.usingIgnoringFieldsComparator(Restaurant.class, "dishes");
     public static final MatcherFactory.Matcher<Restaurant> RESTAURANT_WITH_DISH_MATCHER = MatcherFactory.usingAssertions(Restaurant.class,
             (a, e) -> assertThat(a).usingRecursiveComparison().ignoringFields("dishes.restaurant").isEqualTo(e),
             (a, e) -> {
                 throw new UnsupportedOperationException();
             });
+    public static final MatcherFactory.Matcher<RestaurantTo> RESTAURANT_TO_MATCHER = MatcherFactory.usingEqualsComparator(RestaurantTo.class);
 
     public static final int RESTAURANT1_ID = 1;
     public static final int NOT_FOUND_ID = 100;
@@ -30,13 +32,6 @@ public class RestaurantTestData {
         restaurant1.setDishes(List.of(dish7));
         restaurant2.setDishes(List.of(dish8));
         restaurant3.setDishes(List.of(dish9));
-    }
-
-    public static Restaurant getNew() {
-        return new Restaurant(null, "NewRestaurant", "NewAddress 777");
-    }
-
-    public static Restaurant getUpdated() {
-        return new Restaurant(RESTAURANT1_ID, "UpdatedName", "UpdatedAddress");
+        restaurant4.setDishes(List.of(dish10, dish11));
     }
 }

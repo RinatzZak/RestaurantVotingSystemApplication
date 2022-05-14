@@ -16,6 +16,7 @@ import com.github.rinatzzak.votingsystem.util.RestaurantUtil;
 import com.github.rinatzzak.votingsystem.web.AbstractControllerTest;
 import com.github.rinatzzak.votingsystem.web.GlobalExceptionHandler;
 
+import static com.github.rinatzzak.votingsystem.web.user.UserTestData.USER_MAIL;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -36,6 +37,13 @@ class AdminRestaurantControllerTest extends AbstractControllerTest {
     void getUnAuth() throws Exception {
         perform(MockMvcRequestBuilders.get(REST_URL))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithUserDetails(value = USER_MAIL)
+    void getForbidden() throws Exception {
+        perform(MockMvcRequestBuilders.get(REST_URL))
+                .andExpect(status().isForbidden());
     }
 
     @Test

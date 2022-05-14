@@ -49,13 +49,13 @@ public class ValidationUtil {
         }
     }
 
-    public static void checkEmpty(Object e) {
+    public static void checkForNull(Object e) {
         if (e != null) {
             throw new IllegalRequestDataException("It is already exist!");
         }
     }
 
-    public static void checkNotEmpty(Object e) {
+    public static void checkForNotNull(Object e) {
         if (e == null) {
             throw new IllegalRequestDataException("Entity not found!");
         }

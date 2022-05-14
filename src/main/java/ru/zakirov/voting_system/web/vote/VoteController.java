@@ -17,7 +17,6 @@ import ru.zakirov.voting_system.web.SecurityUtil;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.zakirov.voting_system.util.validation.ValidationUtil.*;
 
@@ -59,7 +58,7 @@ public class VoteController {
         int userId = SecurityUtil.authId();
         Vote vote = getTodayVote().getBody();
         assureIdConsistent(restaurantRepository.getById(restaurantId), restaurantId);
-        checkEmpty(vote);
+        checkForNull(vote);
         Vote created = new Vote(LocalDate.now(),restaurantRepository.getById(restaurantId), userRepository.getById(userId));
         voteRepository.save(created);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -73,7 +72,7 @@ public class VoteController {
     public void update(Integer restaurantId) {
         Vote vote = getTodayVote().getBody();
         Restaurant restaurant = restaurantRepository.getById(restaurantId);
-        checkNotEmpty(vote);
+        checkForNotNull(vote);
         checkTime();
         assureIdConsistent(restaurant, restaurantId);
         vote.setRestaurant(restaurant);
